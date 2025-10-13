@@ -1,0 +1,58 @@
+\documentclass[tikz,border=3.14mm]{standalone}
+\usepackage{ctex} % 支持中文显示
+\usepackage{amsmath, amssymb} % 数学符号
+
+\begin{document}
+	\begin{tikzpicture}[scale=1.2, font=\small]
+		% 坐标轴
+		\draw[->, thick] (-0.5,0) -- (10,0) node[below] {数轴};
+		
+		% 标记关键点 l, a, L
+		\draw[thick] (1,0.15) -- (1,-0.15) node[below] {$l$};
+		\draw[thick] (5,0.15) -- (5,-0.15) node[below] {$a$};
+		\draw[thick] (9,0.15) -- (9,-0.15) node[below] {$L$};
+		
+		% 区间 (l,L) 标记
+		\draw[very thick, blue] (1,0) -- (9,0);
+		\node[above] at (5,-1.4) {$(\textbf{\textit l},\textbf{\textit L})$};
+		
+		% a 点的 ε-邻域 (红色)
+		\draw[red, very thick] (4.5,0.3) -- (5.5,0.3);
+		\draw[red, very thick] (4.5,0.3) -- (4.5,0.5);
+		\draw[red, very thick] (5.5,0.3) -- (5.5,0.5);
+		\node[red, above] at (5,0.6) {$U(a,\varepsilon)$};
+		\node[red, above] at (5,0.9) {(只有有限项)};
+		
+		% l 的 ε-邻域 (绿色)
+		\draw[green!60!black, very thick] (0.5,0.3) -- (1.5,0.3);
+		\draw[green!60!black, very thick] (0.5,0.3) -- (0.5,0.5);
+		\draw[green!60!black, very thick] (1.5,0.3) -- (1.5,0.5);
+		\node[green!60!black, above] at (1,0.6) {$U(l,\varepsilon)$};
+		\node[green!60!black, above] at (1,0.9) {(聚点，有无穷多项)};
+		
+		% L 的 ε-邻域 (绿色)
+		\draw[green!60!black, very thick] (8.5,0.3) -- (9.5,0.3);
+		\draw[green!60!black, very thick] (8.5,0.3) -- (8.5,0.5);
+		\draw[green!60!black, very thick] (9.5,0.3) -- (9.5,0.5);
+		\node[green!60!black, above] at (9,0.6) {$U(L,\varepsilon)$};
+		\node[green!60!black, above] at (9,0.9) {(聚点，有无穷多项)};
+		
+		% 不相交关系标注（位置提高）
+		\draw[<->, thick] (1.5,1.5) -- (4.5,1.5) node[midway, above] {$U(l,\varepsilon) \cap U(a,\varepsilon) = \varnothing$};
+		\draw[<->, thick] (5.5,1.5) -- (8.5,1.5) node[midway, above] {$U(a,\varepsilon) \cap U(L,\varepsilon) = \varnothing$};
+		
+		% 关键距离标注
+		\draw[<->, dashed] (4.5,-0.6) -- (5.5,-0.6) node[midway, below] {$2\varepsilon$};
+		\draw[<->, dashed] (0.5,-0.6) -- (1.5,-0.6) node[midway, below] {$2\varepsilon$};
+		\draw[<->, dashed] (8.5,-0.6) -- (9.5,-0.6) node[midway, below] {$2\varepsilon$};
+		
+		% 证明思路标注
+		%\node[below, align=center] at (5,-1.5) {由于 $x_{n+1} - x_n \to 0$，相邻项距离小于 $\varepsilon$};
+		%\node[below, align=center] at (5,-2) {从 $U(l,\varepsilon)$ 出发的序列无法跳过 $U(a,\varepsilon)$ 到达 $U(L,\varepsilon)$};
+		%\node[below, align=center] at (5,-2.5) {与 $l$ 和 $L$ 是极限点矛盾};
+		
+		% 标题
+		\node[above, align=center, font=\large\bfseries] at (5,2) {反证法示意图：证明 $(l,L)$ 中每点都是 $\{x_n\}$ 的极限点};
+		% \node[above, align=center] at (5,2.5) {设 $\exists a \in (l,L)$ 不是极限点，则 $\exists \varepsilon > 0$ 使得 $O_\varepsilon(a)$ 中只有有限项};
+	\end{tikzpicture}
+\end{document}
