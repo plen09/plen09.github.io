@@ -1,0 +1,60 @@
+\documentclass[tikz,border=5mm]{standalone}
+\usepackage{tikz,ctex}
+\usetikzlibrary{shapes.geometric, shapes.misc} % 添加 shapes.misc 库
+
+\begin{document}
+	\begin{tikzpicture}[
+		scale=0.8,
+		every node/.style={font=\small},
+		checkpoint/.style={circle, draw=red, fill=white, thick, minimum size=8mm},
+		start/.style={regular polygon, regular polygon sides=3, draw=green!70!black, fill=green!20, thick, minimum size=8mm},
+		finish/.style={double circle, draw=blue, thick, inner sep=0.5mm, minimum size=8mm}, % 修正后的双圆样式
+		water/.style={blue!30, draw=blue!50},
+		forest/.style={green!30, draw=green!50}
+		]
+		
+		% 绘制地形背景
+		\fill[forest] (0,0) rectangle (10,8); % 森林区域
+		\fill[brown!30] (3,2) to [bend right] (7,3) -- (8,6) -- (4,5) -- cycle; % 小径
+		\fill[water] (2,6) circle (1.2) node[black] {湖}; % 湖泊
+		
+		% 绘制路线
+		\draw[thick, dashed, red] (1,1) -- (2,3) -- (5,4) -- (8,5) -- (9,2);
+		
+		% 起点和终点
+		\node[start] (S) at (1,1) {起};
+		
+		%
+		
+		\node[start] (I) at (9,2) {终};
+		
+		% 检查点 (CP)
+		\node[checkpoint] (CP1) at (2,3) {1};
+		\node[checkpoint] (CP2) at (5,4) {2};
+		\node[checkpoint] (CP3) at (8,5) {3};
+		
+		% 添加图例
+		\begin{scope}[shift={(0,-1.5)}]
+%			\node[start, label=right:起点] at (1,0) {};
+			\node[checkpoint, label=right:检查点] at (1,0) {$n$};
+			\draw[dashed, red] (3.5,0) -- (4.5,0);
+			\node at (5,0) {路线};
+			\fill[green!30] (6,-0.3) rectangle (6.5,0.3);
+			\node at (7,0) {森林};
+			\fill[blue!30] (8,-0.3) rectangle (8.5,0.3);
+			\node at (9,0) {水域};
+		\end{scope}
+		
+		% 添加比例尺
+		\draw[thick] (0.5,7.5) -- (2.5,7.5) node[midway,above] {\small200 m};
+		\draw[thick] (0.5,7.3) -- (0.5,7.7);
+		\draw[thick] (2.5,7.3) -- (2.5,7.7);
+		
+		% 添加指北针
+		\draw[thick, ->] (8,7) -- (9,7) node[right] {北};
+		\draw (8.5,7) circle (0.3);
+		\fill (8.5,7) circle (0.1);
+		
+		\node[above, align=center, font=\large\bfseries] at (5,8.5) {“行列式求值技巧”专项训练定向越野地图};
+	\end{tikzpicture}
+\end{document}
