@@ -1,0 +1,99 @@
+\documentclass{ctexart}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{xeCJK}
+\usepackage{fancyhdr}
+\usepackage{xeCJKfntef}
+\usepackage{fontspec}
+\usepackage{titlesec}
+\usepackage{ulem}
+\usepackage{mdframed}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+
+% 设置定理环境
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}{引理}
+\newtheorem{example}{例题}
+
+\begin{document}
+	
+	\begin{itemize}
+		\item Date：2025.10.23
+		\item Type: 数学分析（一）
+		\item Source: 数分101
+	\end{itemize}
+	
+	\textbf{注：}{\kaishu 以下内容整理自数学分析课程笔记，主要涉及连根式数列的收敛性判别方法及相关例题。}
+	
+	\section*{一、Herschfeld 判别法}
+	
+	\begin{theorem}[Herschfeld 判别法]
+		设 $ p > 1 $，定义数列 
+		$$ a_n = \sqrt[p]{b_1 + p\sqrt[p]{b_2 + \cdots + p\sqrt[p]{b_n}}} $$
+		其中 $ b_n > 0 $。则数列 $ \{a_n\} $ 收敛的充要条件是数列 
+		$$ \left\{ \frac{\ln b_n}{p^n} \right\} $$
+		有界。
+	\end{theorem}
+	
+	\textbf{证明思路：}
+	
+	\subsection*{必要性证明（收敛 $\Rightarrow$ 有界）}
+	通过适当放缩，得到 $ a_n \ge (b_n)^{1/p^n} $。由于 $ \{a_n\} $ 收敛，故有界，从而 $ (b_n)^{1/p^n} $ 也有界。两边取对数即得结论。
+	
+	\subsection*{充分性证明（有界 $\Rightarrow$ 收敛）}
+	由 $ \frac{\ln b_n}{p^n} $ 有界可推出 $ b_n \le M^{p^n} $（$ M > 0 $ 为常数）。代入定义进行放缩：
+	$$ a_n \le M \cdot \sqrt[p]{1 + \sqrt[p]{1 + \cdots + \sqrt[p]{1}}} $$
+	
+	构造辅助数列 $ x_1 = 1 $，$ x_{n+1} = (1 + x_n)^{1/p} $。通过求导和压缩映射原理证明该数列单调递增且有上界，从而说明上述表达式有界。同时 $ a_n $ 本身单调递增，由单调有界定理知 $ \{a_n\} $ 收敛。
+	
+	\section*{二、Pólya 判别法的推广形式}
+	
+	\begin{lemma}[Pólya 判别法]
+		设 $ a_n > 0 $，$ r \ge 2 $，定义
+		$$ t_n = \sqrt[r]{a_1 + \sqrt[r]{a_2 + \cdots + \sqrt[r]{a_n}}} $$
+		令 $ a = \varlimsup\limits_{n \to \infty} \dfrac{\ln \ln a_n}{n} $，则：
+		\begin{enumerate}
+			\item 若 $ a > \ln r $，数列 $ \{t_n\} $ 发散；
+			\item 若 $ a < \ln r $，数列 $ \{t_n\} $ 收敛。
+		\end{enumerate}
+	\end{lemma}
+	
+	\textbf{注：}此判别法可以基本解决课内大部分连根式敛散性问题。
+	
+	\section*{三、典型例题分析}
+	
+	\begin{example}
+		证明极限
+		$$ \lim_{n \to \infty} \sqrt{m + \sqrt{m+1 + \sqrt{m+2 + \cdots + \sqrt{m+n}}}} $$
+		存在（记该极限为 $ a_m $），并计算
+		$$ \lim_{m \to \infty} (a_m - \sqrt{m}) $$
+	\end{example}
+	
+	\textbf{解答：}
+	
+	\subsection*{第一问：极限存在性证明}
+	通过证明该连根式定义的数列单调递增且有上界，应用单调有界定理即可证明极限存在。
+	
+	\subsection*{第二问：极限计算}
+	由定义可得递推关系：
+	$$ a_m^2 = m + a_{m+1} $$
+	
+	计算过程：
+	\begin{align*}
+		\lim_{m \to \infty} (a_m - \sqrt{m}) &= \lim_{m \to \infty} \frac{a_m^2 - m}{a_m + \sqrt{m}} \\
+		&= \lim_{m \to \infty} \frac{(m + a_{m+1}) - m}{a_m + \sqrt{m}} \\
+		&= \lim_{m \to \infty} \frac{a_{m+1}}{a_m + \sqrt{m}} \\
+		&= \frac{1}{2}
+	\end{align*}
+	
+	\textbf{补充估计：}实际上有更精细的估计 $ \sqrt{m} < a_m < \sqrt{m} + 1 $。
+	
+\end{document}
