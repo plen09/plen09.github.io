@@ -25,13 +25,17 @@
 
 \begin{document}
 	
+	\begin{mdframed}
+		\fangsong
 	\begin{itemize}
 		\item Date：2025.10.23
 		\item Type: 数学分析（一）
 		\item Source: 数分101
 	\end{itemize}
 	
-	\textbf{注：}{\kaishu 以下内容整理自数学分析课程笔记，主要涉及连根式数列的收敛性判别方法及相关例题。}
+	\end{mdframed}
+	
+	\textbf{注：}{\kaishu 以下内容整理自他人数学分析课程笔记，主要涉及连根式数列的收敛性判别方法及相关例题。}
 	
 	\section*{一、Herschfeld 判别法}
 	
@@ -49,7 +53,7 @@
 	通过适当放缩，得到 $ a_n \ge (b_n)^{1/p^n} $。由于 $ \{a_n\} $ 收敛，故有界，从而 $ (b_n)^{1/p^n} $ 也有界。两边取对数即得结论。
 	
 	\subsection*{充分性证明（有界 $\Rightarrow$ 收敛）}
-	由 $ \frac{\ln b_n}{p^n} $ 有界可推出 $ b_n \le M^{p^n} $（$ M > 0 $ 为常数）。代入定义进行放缩：
+	由 $ \dfrac{\ln b_n}{p^n} $ 有界可推出 $ b_n \le M^{p^n} $（$ M > 0 $ 为常数）。代入定义进行放缩：
 	$$ a_n \le M \cdot \sqrt[p]{1 + \sqrt[p]{1 + \cdots + \sqrt[p]{1}}} $$
 	
 	构造辅助数列 $ x_1 = 1 $，$ x_{n+1} = (1 + x_n)^{1/p} $。通过求导和压缩映射原理证明该数列单调递增且有上界，从而说明上述表达式有界。同时 $ a_n $ 本身单调递增，由单调有界定理知 $ \{a_n\} $ 收敛。
