@@ -6,8 +6,8 @@
 <meta property="og:description" content="🚇 北京地铁打卡记录              &#x2F;* 1. 全局样式 *&#x2F;         body, html {             margin: 0;             padding: 0;             width: 100%;             height: 100%;             overflow: hid">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://plen09.github.io/image/avatar.png">
-<meta property="article:published_time" content="2025-11-13T15:02:41.330Z">
-<meta property="article:modified_time" content="2025-11-13T15:02:41.330Z">
+<meta property="article:published_time" content="2025-11-13T15:13:56.948Z">
+<meta property="article:modified_time" content="2025-11-13T15:13:56.948Z">
 <meta property="article:author" content="Plenilune Liao">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://plen09.github.io/image/avatar.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/image/favicon.png"><link rel="canonical" href="http://plen09.github.io/subway/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
@@ -177,7 +177,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
-        /* 4. 图例面板 */
+        /* 4. 图例面板 (右上方固定) */
         #legend {
             top: 20px;
             right: 20px;
@@ -252,7 +252,7 @@
             transition: background-color 0.2s, opacity 0.2s;
             color: white; 
             box-sizing: border-box;
-            width: 100px;
+            width: 100px; /* 控制面板中的按钮宽度 */
         }
         .btn-toggle {
             opacity: 0.5;
@@ -282,7 +282,7 @@
             <button id="btn-toggle-transfer" class="btn-toggle" data-state="T">换乘</button>
         </div>
         
-        </div>
+    </div>
 
     <div id="legend" class="floating-panel">
         <h4 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">📍 状态图例 (文字标签)</h4>
@@ -305,12 +305,12 @@
         <div class="legend-item"><span class="legend-tag tag-P">P</span><span>经过</span></div>
         <div class="legend-item"><span class="legend-tag tag-T">T</span><span>换乘</span></div>
         <div class="legend-item"><span>(无标签)</span><span>未打卡</span></div>
-    </div>
 
-    <div id="management-panel" class="floating-panel">
-        <button class="btn-group" id="clearAllBtn" style="background-color: #dc3545; color: white;">清空所有记录</button>
-        <button class="btn-group" id="exportDataBtn" style="background-color: #007bff; color: white; margin-top: 10px;">导出打卡记录</button>
-        <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">点击地图上的站点进行打卡操作。</p>
+        <div style="border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
+            <button class="btn-group" id="clearAllBtn" style="background-color: #dc3545; color: white; width: 100%; margin: 5px 0;">清空所有记录</button>
+            <button class="btn-group" id="exportDataBtn" style="background-color: #007bff; color: white; width: 100%; margin: 5px 0;">导出打卡记录</button>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">点击地图上的站点进行打卡操作。</p>
+        </div>
     </div>
 
     <script src="https://webapi.amap.com/subway?v=1.0&key=YOUR_AMAP_KEY&callback=cbk"></script>
@@ -320,7 +320,7 @@
     const STORAGE_KEY = 'subway_visited_stations_1100_v10_final'; 
 
     let mySubway = null; 
-    let stationRecords = new Map(loadRecords()); // 使用 loadRecords 处理新旧数据结构
+    let stationRecords = new Map(loadRecords());
     let currentStationId = null; 
 
     // --- 配置：状态映射到文字样式 (名称已修正) ---
@@ -511,7 +511,7 @@
         if (!stationId) return;
 
         let record = stationRecords.get(stationId);
-        if (!record) return; // 必须有记录，因为 showPanel 已经创建并缓存了站名
+        if (!record) return; 
 
         let currentState = record.s;
 
@@ -551,7 +551,7 @@
     }
     
     /**
-     * ★★★ 核心修复：导出所有记录，直接使用缓存的站名 ★★★
+     * 核心修复：导出所有记录，直接使用缓存的站名
      */
     function exportRecords() {
         if (stationRecords.size === 0) {
@@ -614,7 +614,7 @@
 
     </script>
 </body>
-</html></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Plenilune Liao</div><div class="author-info-description">就读于北京大学，信息科学技术学院。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/plen09" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1436322283@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/2025-10-25-1/" title="北京大学第零届校园寻宝“燕园梦寻”游记">北京大学第零届校园寻宝“燕园梦寻”游记</a><time datetime="2025-10-25T08:34:02.000Z" title="发表于 2025-10-25 16:34:02">2025-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/02/2025-10-01-1/" title="2025 年 10 月 1 日部分习题解答（线性代数）">2025 年 10 月 1 日部分习题解答（线性代数）</a><time datetime="2025-10-02T05:20:23.000Z" title="发表于 2025-10-02 13:20:23">2025-10-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/01/2025-09-29-1/" title="2025 年 9 月 29 日部分习题解答（数学分析）">2025 年 9 月 29 日部分习题解答（数学分析）</a><time datetime="2025-10-01T09:31:29.000Z" title="发表于 2025-10-01 17:31:29">2025-10-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/28/2025-09-28-1/" title="运动学复习（力学 B）">运动学复习（力学 B）</a><time datetime="2025-09-28T08:34:53.000Z" title="发表于 2025-09-28 16:34:53">2025-09-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/26/2025-09-26-2/" title="线性方程组笔记（高等代数）">线性方程组笔记（高等代数）</a><time datetime="2025-09-26T14:11:12.000Z" title="发表于 2025-09-26 22:11:12">2025-09-26</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E6%83%B3%E6%B3%95/" style="font-size: 1.1em; color: #999">想法</a> <a href="/tags/%E7%AC%94%E8%AE%B0/" style="font-size: 1.5em; color: #99a9bf">笔记</a> <a href="/tags/%E6%9D%90%E6%96%99/" style="font-size: 1.3em; color: #99a1ac">材料</a> <a href="/tags/%E8%A7%A3%E7%AD%94/" style="font-size: 1.5em; color: #99a9bf">解答</a></div></div><div class="card-widget card-archives">
+</html></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Plenilune Liao</div><div class="author-info-description">就读于北京大学，信息科学技术学院。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/plen09" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1436322283@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/2025-10-25-1/" title="北京大学第零届校园寻宝“燕园梦寻”游记">北京大学第零届校园寻宝“燕园梦寻”游记</a><time datetime="2025-10-25T08:34:02.000Z" title="发表于 2025-10-25 16:34:02">2025-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/02/2025-10-01-1/" title="2025 年 10 月 1 日部分习题解答（线性代数）">2025 年 10 月 1 日部分习题解答（线性代数）</a><time datetime="2025-10-02T05:20:23.000Z" title="发表于 2025-10-02 13:20:23">2025-10-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/01/2025-09-29-1/" title="2025 年 9 月 29 日部分习题解答（数学分析）">2025 年 9 月 29 日部分习题解答（数学分析）</a><time datetime="2025-10-01T09:31:29.000Z" title="发表于 2025-10-01 17:31:29">2025-10-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/28/2025-09-28-1/" title="运动学复习（力学 B）">运动学复习（力学 B）</a><time datetime="2025-09-28T08:34:53.000Z" title="发表于 2025-09-28 16:34:53">2025-09-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/26/2025-09-26-2/" title="线性方程组笔记（高等代数）">线性方程组笔记（高等代数）</a><time datetime="2025-09-26T14:11:12.000Z" title="发表于 2025-09-26 22:11:12">2025-09-26</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E7%AC%94%E8%AE%B0/" style="font-size: 1.5em; color: #99a9bf">笔记</a> <a href="/tags/%E6%9D%90%E6%96%99/" style="font-size: 1.3em; color: #99a1ac">材料</a> <a href="/tags/%E6%83%B3%E6%B3%95/" style="font-size: 1.1em; color: #999">想法</a> <a href="/tags/%E8%A7%A3%E7%AD%94/" style="font-size: 1.5em; color: #99a9bf">解答</a></div></div><div class="card-widget card-archives">
     <div class="item-headline">
       <i class="fas fa-archive"></i>
       <span>归档</span>
@@ -642,4 +642,4 @@
         </li>
       
     </ul>
-  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">11</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-11-13T15:05:06.118Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Plenilune Liao</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">11</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-11-13T15:14:21.757Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Plenilune Liao</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
