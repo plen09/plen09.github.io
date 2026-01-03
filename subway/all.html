@@ -1,0 +1,491 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Sept | Sept</title><meta name="author" content="Plenilune Liao"><meta name="copyright" content="Plenilune Liao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="切换城市:                      北京             上海             广州             深圳             杭州             南京             成都             武汉             天津             重庆">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sept">
+<meta property="og:url" content="http://plen09.github.io/subway/all.html">
+<meta property="og:site_name" content="Sept">
+<meta property="og:description" content="切换城市:                      北京             上海             广州             深圳             杭州             南京             成都             武汉             天津             重庆">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://plen09.github.io/image/avatar.png">
+<meta property="article:published_time" content="2026-01-03T08:46:24.817Z">
+<meta property="article:modified_time" content="2026-01-03T08:46:24.817Z">
+<meta property="article:author" content="Plenilune Liao">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://plen09.github.io/image/avatar.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/image/favicon.png"><link rel="canonical" href="http://plen09.github.io/subway/all.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Sept',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha512-fHwaWebuwA7NSF5Qg/af4UeDx9XqUpYpOGgubo3yWu+b2IQR4UeQwbb42Ti7gVAjNtVoI/I9TEoYeu9omwcC6g==" crossorigin="anonymous" referrerpolicy="no-referrer" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 存档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 拓展</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/sol/"><i class="fa-fw fas fa-trophy"></i><span> 解析</span></a></li><li><a class="site-page child" href="/thu/"><i class="fa-fw fas fa-comment"></i><span> 想法</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Sept</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 存档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 拓展</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/sol/"><i class="fa-fw fas fa-trophy"></i><span> 解析</span></a></li><li><a class="site-page child" href="/thu/"><i class="fa-fw fas fa-comment"></i><span> 想法</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title"></h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container">
+    <div id="mybox"></div>
+
+    <!-- 城市选择器 -->
+    <div id="city-selector-panel" class="floating-panel">
+        <strong>切换城市:</strong>
+        <select id="citySelect">
+            <option value="1100">北京</option>
+            <option value="3100">上海</option>
+            <option value="4401">广州</option>
+            <option value="4403">深圳</option>
+            <option value="3301">杭州</option>
+            <option value="3201">南京</option>
+            <option value="5101">成都</option>
+            <option value="4201">武汉</option>
+            <option value="1200">天津</option>
+            <option value="5000">重庆</option>
+            <option value="6101">西安</option>
+            <option value="3205">苏州</option>
+        </select>
+    </div>
+
+    <div id="station-control-panel" class="floating-panel">
+        <button id="btn-close-panel" style="position: absolute; top: 5px; right: 10px; font-size: 20px; background: transparent; border: none; cursor: pointer;">×</button>
+        <h4 id="station-name-display" style="margin-top: 0;"></h4>
+        <p id="station-status-display" style="font-size: 14px; margin-bottom: 15px;"></p>
+        <div class="btn-group">
+            <button id="btn-toggle-arrived" class="btn-toggle" data-state="A">到达</button>
+            <button id="btn-toggle-departed" class="btn-toggle" data-state="D">出发</button> 
+            <button id="btn-toggle-passed" class="btn-toggle" data-state="P">经过</button>
+            <button id="btn-toggle-transfer" class="btn-toggle" data-state="T">换乘</button>
+        </div>
+    </div>
+
+    <div id="legend" class="floating-panel">
+        <h4 id="legend-title" style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">📍 北京打卡记录</h4>
+        <div id="legend-content">
+             <!-- 内容同原版 -->
+             <div class="legend-item"><span class="legend-tag tag-ADPT">ADPT</span><span>全选</span></div>
+             <div class="legend-item"><span class="legend-tag tag-A">A</span><span>到达</span> <span class="legend-tag tag-D" style="margin-left:5px">D</span><span>出发</span></div>
+             <div class="legend-item"><span class="legend-tag tag-P">P</span><span>经过</span> <span class="legend-tag tag-T" style="margin-left:5px">T</span><span>换乘</span></div>
+        </div>
+
+        <div style="border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
+            <button id="exportDataBtn" style="background-color: #007bff; color: white; width: 100%; border:none; padding:8px; border-radius:4px; cursor:pointer; margin-bottom:5px;">导出当前城市记录</button>
+            <button id="clearAllBtn" style="background-color: #dc3545; color: white; width: 100%; border:none; padding:8px; border-radius:4px; cursor:pointer;">清空当前城市</button>
+        </div>
+    </div>
+
+    <!-- 请将 YOUR_AMAP_KEY 替换为你自己的高德 Key -->
+    <script src="https://webapi.amap.com/subway?v=1.0&key=YOUR_AMAP_KEY&callback=cbk"></script>
+    
+    <script type="text/javascript">
+    let mySubway = null; 
+    let stationRecords = new Map();
+    let currentStationId = null;
+    let currentAdcode = "1100";
+
+    const STATE_CONFIG = {
+        'A': ['A', 'tag-A', '到达'], 'D': ['D', 'tag-D', '出发'], 'P': ['P', 'tag-P', '经过'], 'T': ['T', 'tag-T', '换乘'],
+        'AD': ['AD', 'tag-AD', '到达+出发'], 'AP': ['AP', 'tag-AP', '到达+经过'], 'AT': ['AT', 'tag-AT', '换乘+到达'],
+        'DP': ['DP', 'tag-DP', '出发+经过'], 'DT': ['DT', 'tag-DT', '换乘+出发'], 'PT': ['PT', 'tag-PT', '换乘+经过'],
+        'ADP': ['ADP', 'tag-ADP', '到达+出发+经过'], 'ADT': ['ADT', 'tag-ADT', '到达+出发+换乘'],
+        'APT': ['APT', 'tag-APT', '到达+经过+换乘'], 'DPT': ['DPT', 'tag-DPT', '出发+经过+换乘'],
+        'ADPT': ['ADPT', 'tag-ADPT', '全选']
+    };
+
+    // 获取特定城市的存储 Key
+    function getStorageKey() { return `subway_visited_${currentAdcode}`; }
+
+    function loadRecords() {
+        const data = localStorage.getItem(getStorageKey());
+        if (data) {
+            const parsed = JSON.parse(data);
+            stationRecords = new Map(parsed);
+        } else {
+            stationRecords = new Map();
+        }
+    }
+
+    function saveRecords() {
+        localStorage.setItem(getStorageKey(), JSON.stringify(Array.from(stationRecords.entries())));
+    }
+
+    window.cbk = function() {
+        initSubway("1100");
+        
+        // 切换城市事件
+        document.getElementById('citySelect').addEventListener('change', function(e) {
+            initSubway(e.target.value);
+        });
+
+        document.getElementById('clearAllBtn').addEventListener('click', clearAllRecords);
+        document.getElementById('exportDataBtn').addEventListener('click', exportRecords);
+        document.getElementById('btn-close-panel').addEventListener('click', hideStationControlPanel);
+        document.querySelectorAll('.btn-toggle').forEach(btn => {
+            btn.addEventListener('click', e => toggleRecord(currentStationId, e.target.getAttribute('data-state')));
+        });
+    };
+
+    function initSubway(adcode) {
+        currentAdcode = adcode;
+        const cityName = document.getElementById('citySelect').selectedOptions[0].text;
+        document.getElementById('legend-title').innerText = `📍 ${cityName}打卡记录`;
+        
+        // 清理旧实例
+        document.getElementById('mybox').innerHTML = "";
+        loadRecords();
+
+        mySubway = subway("mybox", {
+            adcode: adcode,
+            theme: "colorful",
+            client: 0,
+            control: { zoom: { position: 'LT', switch: true } }
+        });
+
+        mySubway.event.on("subway.complete", () => drawStationTextLabels());
+        mySubway.event.on("station.touch", (ev, info) => showStationControlPanel(info));
+        mySubway.event.on("subway.touch", () => hideStationControlPanel());
+    }
+
+    function drawStationTextLabels() {
+        if (!mySubway) return;
+        mySubway.clearText();
+        stationRecords.forEach((record, stationId) => {
+            const config = STATE_CONFIG[record.s];
+            if (config) {
+                mySubway.addText(stationId, {
+                    text: `<div class="legend-tag ${config[1]}">${config[0]}</div>`,
+                    offset: [0, -10]
+                });
+            }
+        });
+    }
+
+    function showStationControlPanel(info) {
+        currentStationId = info.id;
+        document.getElementById('station-name-display').innerText = info.name;
+        let record = stationRecords.get(currentStationId) || { s: '', n: info.name };
+        record.n = info.name;
+        stationRecords.set(currentStationId, record);
+        updatePanelStatus();
+        document.getElementById('station-control-panel').style.display = 'block';
+    }
+
+    function updatePanelStatus() {
+        const record = stationRecords.get(currentStationId) || { s: '' };
+        const state = record.s;
+        const config = STATE_CONFIG[state];
+        document.getElementById('station-status-display').innerHTML = config ? 
+            `<span class="${config[1]}" style="padding:2px 6px; border-radius:3px; font-weight:bold;">[${config[2]}]</span>` : 
+            `<span style="color:#666">[未打卡]</span>`;
+
+        document.querySelectorAll('.btn-toggle').forEach(btn => {
+            btn.classList.toggle('active', state.includes(btn.getAttribute('data-state')));
+        });
+    }
+
+    function toggleRecord(id, type) {
+        if (!id) return;
+        let record = stationRecords.get(id);
+        let s = record.s;
+        s = s.includes(type) ? s.replace(type, '') : s + type;
+        s = Array.from(s).sort().join('');
+        
+        if (s === '') stationRecords.delete(id);
+        else { record.s = s; stationRecords.set(id, record); }
+        
+        saveRecords();
+        drawStationTextLabels();
+        updatePanelStatus();
+    }
+
+    function hideStationControlPanel() { 
+        document.getElementById('station-control-panel').style.display = 'none'; 
+    }
+
+    function clearAllRecords() {
+        if (confirm("确定清空当前城市的记录吗？")) {
+            stationRecords.clear();
+            saveRecords();
+            drawStationTextLabels();
+            hideStationControlPanel();
+        }
+    }
+
+    function exportRecords() {
+        if (stationRecords.size === 0) return alert("没记录可导出");
+        const data = Array.from(stationRecords.values()).map(r => [r.n, STATE_CONFIG[r.s][2]]);
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `subway_${currentAdcode}_${new Date().getTime()}.json`;
+        a.click();
+    }
+    </script>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Plenilune Liao</div><div class="author-info-description">就读于北京大学，信息科学技术学院。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/plen09" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1436322283@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/23/2025-11-23-1/" title="POA “城市定向外传 · 卷卷猫历险记”游记">POA “城市定向外传 · 卷卷猫历险记”游记</a><time datetime="2025-11-23T15:29:39.000Z" title="发表于 2025-11-23 23:29:39">2025-11-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/2025-10-25-1/" title="北京大学第零届校园寻宝“燕园梦寻”游记">北京大学第零届校园寻宝“燕园梦寻”游记</a><time datetime="2025-10-25T08:34:02.000Z" title="发表于 2025-10-25 16:34:02">2025-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/02/2025-10-01-1/" title="2025 年 10 月 1 日部分习题解答（线性代数）">2025 年 10 月 1 日部分习题解答（线性代数）</a><time datetime="2025-10-02T05:20:23.000Z" title="发表于 2025-10-02 13:20:23">2025-10-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/01/2025-09-29-1/" title="2025 年 9 月 29 日部分习题解答（数学分析）">2025 年 9 月 29 日部分习题解答（数学分析）</a><time datetime="2025-10-01T09:31:29.000Z" title="发表于 2025-10-01 17:31:29">2025-10-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/28/2025-09-28-1/" title="运动学复习（力学 B）">运动学复习（力学 B）</a><time datetime="2025-09-28T08:34:53.000Z" title="发表于 2025-09-28 16:34:53">2025-09-28</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E7%AC%94%E8%AE%B0/" style="font-size: 1.5em; color: #99a9bf">笔记</a> <a href="/tags/%E6%83%B3%E6%B3%95/" style="font-size: 1.1em; color: #999">想法</a> <a href="/tags/%E8%A7%A3%E7%AD%94/" style="font-size: 1.5em; color: #99a9bf">解答</a> <a href="/tags/%E6%9D%90%E6%96%99/" style="font-size: 1.1em; color: #999">材料</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/11/">
+            <span class="card-archive-list-date">
+              十一月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/10/">
+            <span class="card-archive-list-date">
+              十月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/09/">
+            <span class="card-archive-list-date">
+              九月 2025
+            </span>
+            <span class="card-archive-list-count">8</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">12</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-01-03T08:47:29.907Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Plenilune Liao</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
