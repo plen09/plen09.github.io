@@ -1,23 +1,16 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-export interface Province {
-  id: string; // ISO or common ID
-  name: string;
-  nameEn: string;
-  capital: string;
-  visited: boolean;
-  notes?: string;
-  distanceFromBeijing: number; // Approximate distance in km
+export interface TravelEntry {
+  id: string;
+  city: string;
+  province: string;
+  date: string;
+  title: string;
+  content: string;
+  images: string[];
+  tags: string[];
+  coordinates: [number, number]; // [longitude, latitude]
 }
 
-export interface FootprintData {
-  visitedProvinceIds: string[];
-  stats: {
-    totalProvinces: number;
-    visitedCount: number;
-    percentage: number;
-  };
+export interface provinceStats {
+  name: string;
+  count: number;
 }
