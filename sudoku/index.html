@@ -1,0 +1,453 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Sept | Sept</title><meta name="author" content="Plenilune Liao"><meta name="copyright" content="Plenilune Liao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数独工坊 - Sudoku Workshop                             [v-cloak] { display: none; }          .fade-enter-active, .fade-leave-active {       transition: opacity 0.2s ease, transform 0.2s ease;">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sept">
+<meta property="og:url" content="http://plen09.github.io/sudoku/index.html">
+<meta property="og:site_name" content="Sept">
+<meta property="og:description" content="数独工坊 - Sudoku Workshop                             [v-cloak] { display: none; }          .fade-enter-active, .fade-leave-active {       transition: opacity 0.2s ease, transform 0.2s ease;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://plen09.github.io/image/avatar.png">
+<meta property="article:published_time" content="2026-05-08T09:48:48.287Z">
+<meta property="article:modified_time" content="2026-05-08T09:48:48.287Z">
+<meta property="article:author" content="Plenilune Liao">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://plen09.github.io/image/avatar.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/image/favicon.png"><link rel="canonical" href="http://plen09.github.io/sudoku/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Sept',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha512-fHwaWebuwA7NSF5Qg/af4UeDx9XqUpYpOGgubo3yWu+b2IQR4UeQwbb42Ti7gVAjNtVoI/I9TEoYeu9omwcC6g==" crossorigin="anonymous" referrerpolicy="no-referrer" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 存档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 拓展</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/sol/"><i class="fa-fw fas fa-trophy"></i><span> 解析</span></a></li><li><a class="site-page child" href="/thu/"><i class="fa-fw fas fa-comment"></i><span> 想法</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Sept</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 存档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 拓展</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/sol/"><i class="fa-fw fas fa-trophy"></i><span> 解析</span></a></li><li><a class="site-page child" href="/thu/"><i class="fa-fw fas fa-comment"></i><span> 想法</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title"></h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数独工坊 - Sudoku Workshop</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    [v-cloak] { display: none; }
+    
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    /* 优化滚动条样式 */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+  </style>
+</head>
+<body class="bg-[#F9F9F9] text-[#1A1A1A] font-sans selection:bg-[#E5E5E5] antialiased">
+  <div id="app" v-cloak class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E5E5E5] flex-shrink-0">
+      <div class="max-w-4xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-[#1A1A1A] text-white flex items-center justify-center rounded font-mono font-bold text-lg">
+            9
+          </div>
+          <h1 class="font-bold text-xl tracking-tight hidden sm:block">数独工坊</h1>
+        </div>
+        
+        <nav class="flex items-center gap-1 bg-[#F5F5F5] p-1 rounded-xl">
+          <button
+            @click="switchView('rules')"
+            :class="['flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-all', currentView === 'rules' ? 'bg-white shadow-sm text-[#1A1A1A]' : 'text-[#666666] hover:text-[#1A1A1A]']"
+          >
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            变体规则
+          </button>
+          <button
+            @click="switchView('puzzles')"
+            :class="['flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-all', currentView === 'puzzles' ? 'bg-white shadow-sm text-[#1A1A1A]' : 'text-[#666666] hover:text-[#1A1A1A]']"
+          >
+            <i data-lucide="calendar-days" class="w-4 h-4"></i>
+            每周精选
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 md:px-6 py-10 flex-1 w-full">
+      <transition name="fade" mode="out-in">
+        <div v-if="currentView === 'rules'" :key="'rules'">
+          <div class="mb-10 text-center md:text-left">
+            <h2 class="text-3xl font-bold tracking-tight mb-3">数独变体规则</h2>
+            <p class="text-[#666666] max-w-2xl">
+              探索数独的多种玩法。除了在行、列、九宫格内填入不重复的数字外，各种有趣的变体加入了独有的约束，带来截然不同的逻辑挑战。
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div v-for="rule in rules" :key="rule.id" class="bg-white p-6 rounded-2xl border border-[#E5E5E5] shadow-sm hover:shadow-md hover:border-gray-300 transition-all group flex flex-col">
+              <div class="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center mb-4 text-[#1A1A1A] group-hover:bg-[#1A1A1A] group-hover:text-white transition-colors">
+                <i :data-lucide="rule.icon" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-2"></h3>
+              <p class="text-[#444444] text-sm leading-relaxed mb-4 flex-1">
+                
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div v-else :key="'puzzles'">
+          <div class="mb-10 text-center md:text-left">
+            <h2 class="text-3xl font-bold tracking-tight mb-3">每周精选题目</h2>
+            <p class="text-[#666666] max-w-2xl">
+              每周我们都会更新若干道具挑战性的变体数独。你可以点击右侧的按钮前去在线试玩题目。
+            </p>
+          </div>
+
+          <div class="space-y-6">
+            <div v-for="puzzle in puzzles" :key="puzzle.id" class="bg-white p-6 rounded-2xl border border-[#E5E5E5] shadow-sm flex flex-col gap-4 transition-all hover:shadow-md">
+              <div class="flex flex-col md:flex-row gap-6">
+                <div v-if="puzzle.image" class="w-full md:w-40 h-40 shrink-0 rounded-xl overflow-hidden bg-[#F5F5F5] border border-[#EEEEEE]">
+                  <img :src="puzzle.image" :alt="puzzle.title" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" />
+                </div>
+                
+                <div class="flex-1 flex flex-col justify-between">
+                  <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-[#666666] bg-[#F5F5F5] px-2 py-0.5 rounded border border-gray-200">
+                          WEEK 
+                        </span>
+                        <span class="text-xs text-[#888888]"></span>
+                      </div>
+                      <h3 class="text-xl font-bold tracking-tight mb-1"></h3>
+                      <div class="flex items-center gap-2 text-sm mb-3">
+                        <span class="inline-flex items-center gap-1.5 text-[#1A1A1A] font-semibold uppercase text-xs">
+                          <i :data-lucide="puzzle.icon" class="w-3.5 h-3.5"></i> 
+                        </span>
+                        <span class="text-[#CCCCCC]">&bull;</span>
+                        <span :class="difficultyColor(puzzle.difficulty) + ' font-bold text-xs'">
+                          
+                        </span>
+                      </div>
+                      <p class="text-[#666666] text-sm max-w-xl leading-relaxed">
+                        
+                      </p>
+                    </div>
+                    
+                    <div class="shrink-0">
+                      <a 
+                        :href="puzzle.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center justify-center gap-2 bg-[#1A1A1A] hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95 w-full md:w-auto"
+                      >
+                        <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        试玩题目
+                        <i data-lucide="external-link" class="w-3.5 h-3.5 ml-1 opacity-60"></i>
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="mt-4">
+                    <button 
+                      @click="toggleHint(puzzle.id)" 
+                      class="text-xs font-bold text-[#888888] hover:text-[#1A1A1A] flex items-center gap-1.5 transition-colors"
+                    >
+                      <i :data-lucide="expandedHints.includes(puzzle.id) ? 'eye-off' : 'lightbulb'" class="w-3.5 h-3.5"></i>
+                      <span v-text="expandedHints.includes(puzzle.id) ? '隐藏提示' : '查看解题提示'"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <transition name="fade">
+                <div v-if="expandedHints.includes(puzzle.id)" class="pt-4 border-t border-[#F0F0F0]">
+                  <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-amber-900 flex gap-3">
+                    <i data-lucide="info" class="w-4 h-4 shrink-0 text-amber-500 mt-0.5"></i>
+                    <p class="leading-relaxed"></p>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </main>
+
+    
+    <footer class="border-t border-[#E5E5E5] mt-12 py-8 text-center text-xs text-[#888888] bg-white flex-shrink-0 tracking-wide uppercase">
+      <p>&copy; {{ new Date().getFullYear() }} 数独工坊. 探索逻辑之美. Vibed by Plenilune.</p>
+    </footer>
+    
+  </div>
+
+  <script>
+    const { createApp, ref, onMounted, nextTick, watch } = Vue;
+
+    createApp({
+      setup() {
+        const currentView = ref('rules');
+        const expandedHints = ref([]);
+
+        // 统一更新图标的方法
+        const updateIcons = () => {
+          if (window.lucide) {
+            // Lucide 需要在 DOM 节点真实存在后才能替换
+            lucide.createIcons();
+          }
+        };
+
+        const toggleHint = (id) => {
+          const index = expandedHints.value.indexOf(id);
+          if (index > -1) {
+            expandedHints.value.splice(index, 1);
+          } else {
+            expandedHints.value.push(id);
+          }
+          // 提示框展开后，内部可能有新的图标需要初始化
+          nextTick(() => {
+            setTimeout(updateIcons, 100);
+          });
+        };
+
+        const switchView = (view) => {
+          if (currentView.value === view) return;
+          currentView.value = view;
+          // 视图切换涉及到 transition，需要等待动画完成或 DOM 更新
+          nextTick(() => {
+            setTimeout(updateIcons, 250); // 略大于 transition 的时间
+          });
+        };
+
+        const rules = [
+          { id: 'killer', name: '杀手数独 (Killer)', icon: 'layout-grid', description: '标准规则外，盘面带有虚线框（笼子），左上角数字表示框内所有数字之和。笼子内数字不重复。' },
+          { id: 'thermo', name: '温度计数独 (Thermo)', icon: 'thermometer', description: '盘面上有包含球形座的温度计，数字必须从圆形的球座开始向末端严格递增。' },
+          { id: 'arrow', name: '箭头数独 (Arrow)', icon: 'move-up-right', description: '沿着箭头的路径上的数字之和，必须等于圆圈中的数字。' },
+          { id: 'kropki', name: '黑白点数独 (Kropki)', icon: 'circle-dot', description: '相邻两格间有白点表示差为1；有黑点表示成2倍关系。若无点，则上述关系不成立。' },
+          { id: 'renban', name: '连续组线 (Renban)', icon: 'list-ordered', description: '线上数字必须形成一组连续的数字序列（如 2, 3, 4, 5），但出现顺序可以是任意的。' },
+          { id: 'oddeven', name: '奇偶数独 (Odd/Even)', icon: 'binary', description: '盘面中带有圆圈的格点必须填入奇数，带有方块的格点必须填入偶数。' },
+          { id: 'extra', name: '额外区域 (Regions)', icon: 'layers', description: '阴影标注的特定区域（如对角线）也必须像宫一样包含 1 到 9 且不重复。' }
+        ];
+
+        const puzzles = [
+          {
+            id: 'p1',
+            week: '1',
+            title: 'Par Three',
+            variant: 'Killer + Parity lines',
+            icon: 'layout-grid',
+            difficulty: '中等',
+            link: 'https://sudokupad.app/james-sinclair/par-three',
+            date: '2026年5月8日',
+            image: 'https://plen09.github.io/image/sudoku/260508.png',
+            description: 'Parity Lines: 沿着红线的数字奇偶交替。',
+            hint: '暂时不能给你明确的答复。'
+          }
+        ];
+
+        const difficultyColor = (diff) => {
+          switch (diff) {
+            case '简单': return 'text-green-600';
+            case '中等': return 'text-orange-500';
+            case '困难': return 'text-red-500';
+            case '专家': return 'text-purple-600';
+            default: return 'text-gray-600';
+          }
+        };
+
+        onMounted(() => {
+          updateIcons();
+        });
+
+        return {
+          currentView,
+          expandedHints,
+          rules,
+          puzzles,
+          switchView,
+          toggleHint,
+          difficultyColor
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Plenilune Liao</div><div class="author-info-description">就读于北京大学，信息科学技术学院。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/plen09" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1436322283@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/23/2025-11-23-1/" title="POA “城市定向外传 · 卷卷猫历险记”游记">POA “城市定向外传 · 卷卷猫历险记”游记</a><time datetime="2025-11-23T15:29:39.000Z" title="发表于 2025-11-23 23:29:39">2025-11-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/2025-10-25-1/" title="北京大学第零届校园寻宝“燕园梦寻”游记">北京大学第零届校园寻宝“燕园梦寻”游记</a><time datetime="2025-10-25T08:34:02.000Z" title="发表于 2025-10-25 16:34:02">2025-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/02/2025-10-01-1/" title="2025 年 10 月 1 日部分习题解答（线性代数）">2025 年 10 月 1 日部分习题解答（线性代数）</a><time datetime="2025-10-02T05:20:23.000Z" title="发表于 2025-10-02 13:20:23">2025-10-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/01/2025-09-29-1/" title="2025 年 9 月 29 日部分习题解答（数学分析）">2025 年 9 月 29 日部分习题解答（数学分析）</a><time datetime="2025-10-01T09:31:29.000Z" title="发表于 2025-10-01 17:31:29">2025-10-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/28/2025-09-28-1/" title="运动学复习（力学 B）">运动学复习（力学 B）</a><time datetime="2025-09-28T08:34:53.000Z" title="发表于 2025-09-28 16:34:53">2025-09-28</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E7%AC%94%E8%AE%B0/" style="font-size: 1.5em; color: #99a9bf">笔记</a> <a href="/tags/%E6%9D%90%E6%96%99/" style="font-size: 1.1em; color: #999">材料</a> <a href="/tags/%E8%A7%A3%E7%AD%94/" style="font-size: 1.5em; color: #99a9bf">解答</a> <a href="/tags/%E6%83%B3%E6%B3%95/" style="font-size: 1.1em; color: #999">想法</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/11/">
+            <span class="card-archive-list-date">
+              十一月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/10/">
+            <span class="card-archive-list-date">
+              十月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/09/">
+            <span class="card-archive-list-date">
+              九月 2025
+            </span>
+            <span class="card-archive-list-count">8</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">12</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-05-08T09:49:50.207Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Plenilune Liao</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
