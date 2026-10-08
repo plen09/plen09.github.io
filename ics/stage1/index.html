@@ -145,6 +145,7 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
 .q.mark-star::before{background:var(--star)}
 .q:focus{outline:2px solid var(--accent); outline-offset:2px}
 .q.done{opacity:.94}
+.q.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft), var(--shadow)}
 .q-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px}
 .q-id{
   font-weight:700; font-size:14px; letter-spacing:.02em; color:#fff; background:var(--accent);
@@ -478,6 +479,8 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
         <span class="spacer"></span>
         <button id="btnCollapseAll">收起全部答案</button>
         <button id="btnClearFilter" class="ghost">清空筛选</button>
+        <input type="text" id="jumpTo" placeholder="题号，如 B144" size="11" title="输入题号后回车或点「跳转」">
+        <button id="btnJump" class="ghost">跳转</button>
         <button id="btnSingle" class="primary">🧭 单题刷题</button>
         <button id="btnPrint" class="ghost" title="调用浏览器打印对话框（Ctrl/⌘+P），按当前设置输出：练习卷（不含答案）或答案册（含答案），也可另存为 PDF">🖨 打印 / 存 PDF</button>
         <button id="btnPrintToggle" class="ghost" title="切换打印稿是否印出参考答案：不含答案＝空白练习卷，含答案＝答案册">打印稿：含答案</button>
@@ -1322,6 +1325,51 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
     return list;
   }
   function currentList() { return visibleOrdered(); }
+  /* 跳转到指定题号：支持 A3 / B144 / C7，或只写数字（如 144） */
+  function jumpToNumber(raw) {
+    var s = String(raw || '').trim().toUpperCase();
+    if (!s) { toast('请输入题号，例如 B144'); return null; }
+    var target = null;
+    if (/^[ABC]\d+$/.test(s)) target = byId[s] || null;
+    else if (/^\d+$/.test(s)) {
+      var cands = Q.filter(function (q) { return String(q.num) === s; });
+      target = cands[0] || null;
+      if (cands.length > 1) toast('题号 ' + s + ' 有多道（' + cands.map(function (q) { return q.id; }).join('/') + '），已跳到 ' + target.id);
+    }
+    if (!target) { toast('没有找到题号 ' + s); return null; }
+    if (!match(target)) {
+      state.filters = { part: 'all', lec: 'all', st: 'all', year: 'all', type: 'all' };
+      state.q = ''; $('#search').value = ''; state.random = null;
+    }
+    setView('quiz');
+    if (state.single) {
+      var list = visibleOrdered();
+      var idx = -1;
+      list.forEach(function (q, i) { if (q.id === target.id) idx = i; });
+      state.singleIdx = idx >= 0 ? idx : 0;
+    }
+    save(); apply();
+    setTimeout(function () {
+      var el = document.getElementById('qc-' + target.id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.focus({ preventScroll: true });
+      el.classList.add('flash');
+      setTimeout(function () { el.classList.remove('flash'); }, 1700);
+    }, 40);
+    toast('已跳转到 ' + target.id + ' · ' + target.source);
+    return target;
+  }
+  /* 第一道「未通过」的题目：既没判对也没标掌握 */
+  function firstUnpassedIndex() {
+    var list = visibleOrdered();
+    for (var i = 0; i < list.length; i++) {
+      var g = state.grade[list[i].id];
+      var passed = state.marks[list[i].id] === 'ok' || (g && g.ok);
+      if (!passed) return i;
+    }
+    return list.length ? 0 : -1;
+  }
   function gotoIndex(i) {
     var list = currentList();
     if (!list.length) return;
@@ -2269,6 +2317,10 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
       case 'btnSingle':
         toggleSingle();
         break;
+      case 'btnJump': {
+        jumpToNumber($('#jumpTo') ? $('#jumpTo').value : '');
+        break;
+      }
       case 'sbPrev':
         gotoIndex(state.singleIdx - 1);
         break;
@@ -2398,6 +2450,11 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
   document.addEventListener('keydown', function (e) {
     var t = e.target;
     if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) {
+      if (t.id === 'jumpTo' && e.key === 'Enter') {
+        jumpToNumber(t.value);
+        e.preventDefault();
+        return;
+      }
       if (t.classList && t.classList.contains('blank-input') && e.key === 'Enter') {
         gradeQuestion(t.dataset.qid);
         e.preventDefault();
@@ -2452,6 +2509,7 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
   $('#cheatBody').innerHTML = DATA.cheatsheetHtml;
   $('#knowBody').innerHTML = DATA.knowledgeHtml;
   $('#search').value = state.q || '';
+  state.open = {};                       // 每次打开都默认隐藏答案
   if (state.printNoAnswers) {
     document.body.classList.add('print-no-answers');
     var pbtn = $('#btnPrintToggle');
@@ -2470,6 +2528,21 @@ button.active{background:var(--accent-soft); border-color:var(--accent); color:v
   $('#btnRevealAll').textContent = allOpen ? '收起全部答案' : '显示全部答案';
   apply();
   setView(state.view || 'quiz');
+  // 打开时默认定位到第一道「未通过」的题
+  var upIdx = firstUnpassedIndex();
+  if (upIdx >= 0) {
+    var upId = visibleOrdered()[upIdx].id;
+    if (state.single) { state.singleIdx = upIdx; save(); apply(); }
+    setTimeout(function () {
+      var el = document.getElementById('qc-' + upId);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.focus({ preventScroll: true });
+      el.classList.add('flash');
+      setTimeout(function () { el.classList.remove('flash'); }, 1700);
+      toast('已定位到未通过的题目：' + upId);
+    }, 80);
+  }
   tick();
   setInterval(tick, 20000);
 })();
