@@ -5,32 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ICS 备考刷题台 · Plenilune</title>
 <style>
-.topbadge{display:inline-block;padding:3px 14px;border-radius:999px;font-size:13.5px;font-weight:700;letter-spacing:.05em;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent);margin-bottom:18px}
-:root{--bg:#f5f6fa;--panel:#fff;--ink:#1b2333;--muted:#727c8f;--line:#e4e8f0;--accent:#2f6fed;--accent-2:#1b54c8;--accent-soft:#eaf1ff;--ok:#12855f;--okbg:#e6f6ef;--warn:#c9701b;--warnbg:#fdf0e2}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
-.wrap{max-width:980px;margin:0 auto;padding:48px 20px 80px}
-h1{font-size:26px;margin:0 0 6px}.sub{color:var(--muted);margin:0 0 28px}
-.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(21,32,56,.05),0 8px 24px -18px rgba(21,32,56,.35);transition:.15s}
-.card:hover{transform:translateY(-2px);border-color:var(--accent)}
-.card.disabled{opacity:.72;cursor:default}.card.disabled:hover{transform:none;border-color:var(--line)}
-.row{display:flex;align-items:center;gap:10px}.row h2{font-size:17px;margin:0}
-.date{color:var(--muted);font-size:13px;margin:2px 0 6px}.card p{margin:0 0 8px;color:#3d4757;font-size:14px}
-.path{font:12.5px "SFMono-Regular",Consolas,Menlo,monospace;color:var(--muted)}
-.go{margin-top:10px;color:var(--accent-2);font-size:13.5px;font-weight:600}
-.st{font-size:12px;padding:1px 8px;border-radius:999px}.st.ok{background:var(--okbg);color:var(--ok)}.st.soon{background:var(--warnbg);color:var(--warn)}
-footer{margin-top:32px;color:var(--muted);font-size:13px}footer a{color:var(--accent)}
+:root{
+  --bg:#f4f6fb;
+  --wash:radial-gradient(1200px 520px at 12% -8%, #e8efff 0%, rgba(232,239,255,0) 62%),
+        radial-gradient(900px 420px at 92% 0%, #e9f7f1 0%, rgba(233,247,241,0) 58%);
+  --panel:#fff; --panel-2:#f8fafd;
+  --ink:#161d2b; --ink-2:#414c60; --muted:#78849a;
+  --line:#e3e8f2; --line-2:#eef1f7;
+  --accent:#2b6cf0; --accent-2:#1a51c4; --accent-soft:#ebf1ff;
+  --ok:#0f7f5c; --ok-soft:#e7f6f0;
+  --warn:#c06a15; --warn-soft:#fdf1e3;
+  --radius:16px;
+  --shadow:0 1px 2px rgba(20,30,52,.05), 0 10px 28px -22px rgba(20,30,52,.45);
+  --shadow-hover:0 2px 4px rgba(20,30,52,.06), 0 18px 36px -22px rgba(20,30,52,.5);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1117;
+    --wash:radial-gradient(1100px 480px at 10% -10%, #16203a 0%, rgba(22,32,58,0) 60%),
+          radial-gradient(900px 420px at 95% 0%, #10291f 0%, rgba(16,41,31,0) 55%);
+    --panel:#161b24; --panel-2:#131821;
+    --ink:#e9edf4; --ink-2:#c2cad7; --muted:#8d98ac;
+    --line:#252d3a; --line-2:#1e2530;
+    --accent:#7ba4ff; --accent-2:#a3c0ff; --accent-soft:#1a2440;
+    --ok:#4cc79a; --ok-soft:#112a20;
+    --warn:#e8a25c; --warn-soft:#2b2114;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -22px rgba(0,0,0,.9);
+    --shadow-hover:0 2px 6px rgba(0,0,0,.45), 0 18px 38px -22px rgba(0,0,0,.95);
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background-color:var(--bg); background-image:var(--wash); background-attachment:fixed;
+  color:var(--ink); min-height:100vh;
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-soft); color:var(--accent-2)}
+a{color:inherit; text-decoration:none}
+.wrap{max-width:940px; margin:0 auto; padding:64px 22px 72px}
+header{margin-bottom:34px}
+h1{margin:0 0 8px; font-size:29px; letter-spacing:-.01em}
+.sub{margin:0; color:var(--muted); font-size:14.5px}
+.topbadge{
+  display:inline-block; margin:0 0 10px; padding:3px 14px; border-radius:999px;
+  font-size:12.5px; font-weight:600; letter-spacing:.02em;
+  background:var(--accent-soft); color:var(--accent-2);
+  border:1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+}
+.rule{height:3px; width:52px; border-radius:2px; margin:20px 0 0;
+  background:linear-gradient(90deg,var(--accent),#59c39a)}
+.card{
+  display:block; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:20px 22px; margin-bottom:14px; box-shadow:var(--shadow);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover{transform:translateY(-2px); box-shadow:var(--shadow-hover);
+  border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+.card.disabled{opacity:.66; cursor:default}
+.card.disabled:hover{transform:none; box-shadow:var(--shadow);
+  border-color:var(--line)}
+.row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.row h2{margin:0; font-size:17.5px; letter-spacing:-.005em}
+.date{color:var(--muted); font-size:12.8px; margin:6px 0 8px; font-variant-numeric:tabular-nums}
+.card p{margin:0; color:var(--ink-2); font-size:14px}
+.path{margin-top:12px; font:12.5px "SFMono-Regular",Consolas,Menlo,monospace; color:var(--muted)}
+.go{margin-top:12px; color:var(--accent-2); font-size:13.5px; font-weight:600}
+.st{font-size:11.5px; font-weight:600; padding:2px 10px; border-radius:999px; letter-spacing:.02em}
+.st.ok{background:var(--ok-soft); color:var(--ok)}
+.st.soon{background:var(--warn-soft); color:var(--warn)}
+footer{margin-top:34px; padding-top:18px; border-top:1px solid var(--line-2);
+  color:var(--muted); font-size:12.5px; font-variant-numeric:tabular-nums}
+@media (max-width:640px){
+  .wrap{padding:40px 16px 56px}
+  h1{font-size:24px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>ICS 备考刷题台</h1>
-<div class="topbadge">Powered by Sept, 2026.</div>
-<p class="sub">北京大学《计算机系统导论》2026 秋 · 四场考试逐题刷题网页（单文件离线可用，进度与草稿存在浏览器本地）</p>
-<a class="card" href="./stage1/"><div class="row"><h2>第一次阶段测验</h2><span class="st ok">已上线</span></div><div class="date">2026-10-12 周一</div><p>第 1–8 讲 · 2025 阶段测验全卷 + 2012–2024 期中 + 2013–2024 期末补充（193 题）</p><div class="path">/ics/stage1/</div><div class="go">进入刷题 →</div></a>
-<div class="card disabled"><div class="row"><h2>第二次阶段测验</h2><span class="st soon">待生成</span></div><div class="date">2026-11-16 周一</div><p>第 10–18 讲 · Y86-64 / HCL / 流水线 / Cache / 链接 / ECF</p><div class="path">/ics/stage2/</div><div class="go">还没生成</div></div>
-<div class="card disabled"><div class="row"><h2>LAB 测验</h2><span class="st soon">待生成</span></div><div class="date">2026-12-24 周四</div><p>L0–L8 · Linux / 工具链 / 8 个 Lab 的「做了什么 + 为什么」</p><div class="path">/ics/lab/</div><div class="go">还没生成</div></div>
-<div class="card disabled"><div class="row"><h2>期末考试</h2><span class="st soon">待生成</span></div><div class="date">2026-12-28 周一</div><p>全学期 · 系统级 I/O / 虚拟内存 / 网络 / 并发与同步</p><div class="path">/ics/final/</div><div class="go">还没生成</div></div>
-<footer>更新于 2026-10-08 · 题目与答案来自课程往年题，仅供本人复习使用</footer>
+<header>
+  <h1>ICS 备考刷题台</h1>
+  <div class="topbadge">Powered by Sept, 2026.</div>
+  <p class="sub">北京大学《计算机系统导论》2026 秋 · 四场考试</p>
+  <div class="rule"></div>
+</header>
+
+<a class="card" href="./stage1/">
+  <div class="row">
+    <h2>第一次阶段测验</h2>
+    <span class="st ok">已上线</span>
+  </div>
+  <div class="date">2026-10-12 周一</div>
+  <p>第 1–8 讲 · 2025 阶段测验全卷 + 2012–2024 期中 + 2013–2024 期末补充，共 194 题</p>
+  <div class="path">/ics/stage1/</div>
+  <div class="go">进入刷题 →</div>
+</a>
+
+<a class="card disabled">
+  <div class="row">
+    <h2>第二次阶段测验</h2>
+    <span class="st soon">待生成</span>
+  </div>
+  <div class="date">2026-11-16 周一</div>
+  <p>第 10–18 讲 · Y86-64 / HCL / 流水线 / Cache / 链接 / ECF</p>
+  <div class="path">/ics/stage2/</div>
+</a>
+
+<a class="card disabled">
+  <div class="row">
+    <h2>LAB 测验</h2>
+    <span class="st soon">待生成</span>
+  </div>
+  <div class="date">2026-12-24 周四</div>
+  <p>L0–L8 · Linux / 工具链 / 8 个 Lab 的「做了什么 + 为什么」</p>
+  <div class="path">/ics/lab/</div>
+</a>
+
+<a class="card disabled">
+  <div class="row">
+    <h2>期末考试</h2>
+    <span class="st soon">待生成</span>
+  </div>
+  <div class="date">2026-12-28 周一</div>
+  <p>全学期 · 系统级 I/O / 虚拟内存 / 网络 / 并发与同步</p>
+  <div class="path">/ics/final/</div>
+</a>
+
+<footer>更新于 <time data-updated>2026-10-08 19:18</time>（UTC+8）</footer>
 </div>
 </body>
 </html>

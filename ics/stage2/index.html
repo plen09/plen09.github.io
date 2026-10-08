@@ -1,19 +1,70 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>第二次阶段测验 · 刷题台（待生成）</title>
-<style>body{margin:0;background:#f5f6fa;color:#1b2333;font:15px/1.75 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}.w{max-width:720px;margin:0 auto;padding:90px 20px}h1{font-size:22px;margin:0 0 8px}p{color:#727c8f;margin:0 0 22px}a{display:inline-block;color:#1b54c8;font-weight:600;text-decoration:none}.box{background:#fff;border:1px solid #e4e8f0;border-radius:14px;padding:26px 28px}</style>
+<title>第二次阶段测验 · 刷题台</title>
+<style>
+:root{
+  --bg:#f4f6fb;
+  --wash:radial-gradient(1200px 520px at 12% -8%, #e8efff 0%, rgba(232,239,255,0) 62%),
+        radial-gradient(900px 420px at 92% 0%, #e9f7f1 0%, rgba(233,247,241,0) 58%);
+  --panel:#fff; --ink:#161d2b; --ink-2:#414c60; --muted:#78849a;
+  --line:#e3e8f2; --accent:#2b6cf0; --accent-2:#1a51c4; --accent-soft:#ebf1ff;
+  --warn:#c06a15; --warn-soft:#fdf1e3;
+  --radius:16px;
+  --shadow:0 1px 2px rgba(20,30,52,.05), 0 10px 28px -22px rgba(20,30,52,.45);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1117;
+    --wash:radial-gradient(1100px 480px at 10% -10%, #16203a 0%, rgba(22,32,58,0) 60%),
+          radial-gradient(900px 420px at 95% 0%, #10291f 0%, rgba(16,41,31,0) 55%);
+    --panel:#161b24; --ink:#e9edf4; --ink-2:#c2cad7; --muted:#8d98ac;
+    --line:#252d3a; --accent:#7ba4ff; --accent-2:#a3c0ff; --accent-soft:#1a2440;
+    --warn:#e8a25c; --warn-soft:#2b2114;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -22px rgba(0,0,0,.9);
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+  background-color:var(--bg); background-image:var(--wash); background-attachment:fixed;
+  color:var(--ink);
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.box{
+  width:min(660px, calc(100% - 40px)); margin:40px 0; padding:34px 36px;
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.st{
+  display:inline-block; font-size:11.5px; font-weight:600; letter-spacing:.02em;
+  padding:2px 10px; border-radius:999px; background:var(--warn-soft); color:var(--warn);
+}
+h1{margin:14px 0 10px; font-size:22px; letter-spacing:-.01em}
+p{margin:0 0 10px; color:var(--ink-2); font-size:14.5px}
+.meta{color:var(--muted); font-size:13.5px; font-variant-numeric:tabular-nums}
+.rule{height:3px; width:46px; border-radius:2px; margin:22px 0;
+  background:linear-gradient(90deg,var(--accent),#59c39a)}
+a.back{display:inline-block; margin-top:22px; color:var(--accent-2); font-weight:600; font-size:14px}
+a.back:hover{text-decoration:underline}
+footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+  color:var(--muted); font-size:12.5px; font-variant-numeric:tabular-nums}
+</style>
 </head>
 <body>
-<div class="w">
 <div class="box">
-<h1>第二次阶段测验 · 刷题台</h1>
-<p>考试时间：2026-11-16 周一（覆盖 第 10–18 讲 · Y86-64 / HCL / 流水线 / Cache / 链接 / ECF）<br>这一场的题目汇编与刷题网页还没生成，路径先占住：生成后直接替换本页即可。</p>
-<a href="../">← 返回 ICS 题库首页</a>
-</div>
+  <span class="st">待生成</span>
+  <h1>第二次阶段测验 · 刷题台</h1>
+  <p class="meta">考试时间：2026-11-16 周一</p>
+  <p>覆盖第 10–18 讲 · Y86-64 / HCL / 流水线 / Cache / 链接 / ECF</p>
+  <div class="rule"></div>
+  <p>这一场的题库还在整理，完成后直接替换本页。</p>
+  <a class="back" href="../">← 返回 ICS 题库首页</a>
+  <footer>更新于 <time data-updated>2026-10-08 19:18</time>（UTC+8）</footer>
 </div>
 </body>
 </html>
