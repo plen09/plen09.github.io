@@ -1,138 +1,607 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ICS 备考刷题台 · Plenilune</title>
+<script>
+  // 提前定主题，避免深色偏好下先闪一下浅色
+  try {
+    var savedTheme = localStorage.getItem('theme');
+    var preferred = savedTheme || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', preferred);
+  } catch (e) {}
+</script>
 <style>
-:root{
-  --bg:#f4f6fb;
-  --wash:radial-gradient(1200px 520px at 12% -8%, #e8efff 0%, rgba(232,239,255,0) 62%),
-        radial-gradient(900px 420px at 92% 0%, #e9f7f1 0%, rgba(233,247,241,0) 58%);
-  --panel:#fff; --panel-2:#f8fafd;
-  --ink:#161d2b; --ink-2:#414c60; --muted:#78849a;
-  --line:#e3e8f2; --line-2:#eef1f7;
-  --accent:#2b6cf0; --accent-2:#1a51c4; --accent-soft:#ebf1ff;
-  --ok:#0f7f5c; --ok-soft:#e7f6f0;
-  --warn:#c06a15; --warn-soft:#fdf1e3;
-  --radius:16px;
-  --shadow:0 1px 2px rgba(20,30,52,.05), 0 10px 28px -22px rgba(20,30,52,.45);
-  --shadow-hover:0 2px 4px rgba(20,30,52,.06), 0 18px 36px -22px rgba(20,30,52,.5);
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Light Theme */
+  --bg: #f8fafc;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-bg-hover: #ffffff;
+  --panel: #ffffff;
+  --border: rgba(226, 232, 240, 0.9);
+  --border-hover: rgba(59, 130, 246, 0.4);
+  --border-focus: #3b82f6;
+
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-muted: #94a3b8;
+
+  --primary: #2563eb;
+  --primary-light: #eff6ff;
+  --primary-border: #bfdbfe;
+
+  --success: #059669;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+
+  --pending: #d97706;
+  --pending-bg: #fffbeb;
+  --pending-border: #fde68a;
+
+  --glow-1: rgba(37, 99, 235, 0.08);
+  --glow-2: rgba(16, 185, 129, 0.06);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-card-hover: 0 20px 35px -10px rgba(37, 99, 235, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0e1117;
-    --wash:radial-gradient(1100px 480px at 10% -10%, #16203a 0%, rgba(22,32,58,0) 60%),
-          radial-gradient(900px 420px at 95% 0%, #10291f 0%, rgba(16,41,31,0) 55%);
-    --panel:#161b24; --panel-2:#131821;
-    --ink:#e9edf4; --ink-2:#c2cad7; --muted:#8d98ac;
-    --line:#252d3a; --line-2:#1e2530;
-    --accent:#7ba4ff; --accent-2:#a3c0ff; --accent-soft:#1a2440;
-    --ok:#4cc79a; --ok-soft:#112a20;
-    --warn:#e8a25c; --warn-soft:#2b2114;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -22px rgba(0,0,0,.9);
-    --shadow-hover:0 2px 6px rgba(0,0,0,.45), 0 18px 38px -22px rgba(0,0,0,.95);
-  }
+
+[data-theme="dark"] {
+  --bg: #090d16;
+  --card-bg: rgba(17, 24, 39, 0.7);
+  --card-bg-hover: rgba(24, 33, 53, 0.85);
+  --panel: #111827;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(96, 165, 250, 0.4);
+
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --text-muted: #64748b;
+
+  --primary: #60a5fa;
+  --primary-light: rgba(37, 99, 235, 0.18);
+  --primary-border: rgba(96, 165, 250, 0.3);
+
+  --success: #34d399;
+  --success-bg: rgba(5, 150, 105, 0.15);
+  --success-border: rgba(52, 211, 153, 0.3);
+
+  --pending: #fbbf24;
+  --pending-bg: rgba(217, 119, 6, 0.15);
+  --pending-border: rgba(251, 191, 36, 0.3);
+
+  --glow-1: rgba(59, 130, 246, 0.12);
+  --glow-2: rgba(16, 185, 129, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 20px 35px -10px rgba(0, 0, 0, 0.5), 0 0 20px 0 var(--glow-1);
 }
-*{box-sizing:border-box}
-body{
-  margin:0; background-color:var(--bg); background-image:var(--wash); background-attachment:fixed;
-  color:var(--ink); min-height:100vh;
-  font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  -webkit-font-smoothing:antialiased;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-font-smoothing: antialiased;
 }
-::selection{background:var(--accent-soft); color:var(--accent-2)}
-a{color:inherit; text-decoration:none}
-.wrap{max-width:940px; margin:0 auto; padding:64px 22px 72px}
-header{margin-bottom:34px}
-h1{margin:0 0 8px; font-size:29px; letter-spacing:-.01em}
-.sub{margin:0; color:var(--muted); font-size:14.5px}
-.topbadge{
-  display:inline-block; margin:0 0 10px; padding:3px 14px; border-radius:999px;
-  font-size:12.5px; font-weight:600; letter-spacing:.02em;
-  background:var(--accent-soft); color:var(--accent-2);
-  border:1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+
+/* 背景光效与微妙网格 */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    radial-gradient(circle at 18% 10%, var(--glow-1) 0%, transparent 45%),
+    radial-gradient(circle at 82% 15%, var(--glow-2) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
 }
-.rule{height:3px; width:52px; border-radius:2px; margin:20px 0 0;
-  background:linear-gradient(90deg,var(--accent),#59c39a)}
-.card{
-  display:block; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-  padding:20px 22px; margin-bottom:14px; box-shadow:var(--shadow);
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+
+.ambient-grid {
+  position: fixed;
+  inset: 0;
+  background-size: 32px 32px;
+  background-image: linear-gradient(to right, var(--border) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 10%, black 15%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 10%, black 15%, transparent 80%);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -1;
 }
-.card:hover{transform:translateY(-2px); box-shadow:var(--shadow-hover);
-  border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
-.card.disabled{opacity:.66; cursor:default}
-.card.disabled:hover{transform:none; box-shadow:var(--shadow);
-  border-color:var(--line)}
-.row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-.row h2{margin:0; font-size:17.5px; letter-spacing:-.005em}
-.date{color:var(--muted); font-size:12.8px; margin:6px 0 8px; font-variant-numeric:tabular-nums}
-.card p{margin:0; color:var(--ink-2); font-size:14px}
-.path{margin-top:12px; font:12.5px "SFMono-Regular",Consolas,Menlo,monospace; color:var(--muted)}
-.go{margin-top:12px; color:var(--accent-2); font-size:13.5px; font-weight:600}
-.st{font-size:11.5px; font-weight:600; padding:2px 10px; border-radius:999px; letter-spacing:.02em}
-.st.ok{background:var(--ok-soft); color:var(--ok)}
-.st.soon{background:var(--warn-soft); color:var(--warn)}
-footer{margin-top:34px; padding-top:18px; border-top:1px solid var(--line-2);
-  color:var(--muted); font-size:12.5px; font-variant-numeric:tabular-nums}
-@media (max-width:640px){
-  .wrap{padding:40px 16px 56px}
-  h1{font-size:24px}
+
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+/* 顶部操作条 */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+}
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+  backdrop-filter: blur(8px);
+}
+.theme-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+.theme-btn:hover {
+  color: var(--text-main);
+  border-color: var(--text-muted);
+  transform: scale(1.05);
+}
+
+/* 页面标题 */
+header {
+  margin-bottom: 40px;
+}
+h1 {
+  font-size: clamp(28px, 4.5vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--text-sub));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sub {
+  color: var(--text-sub);
+  font-size: 15.5px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sub-divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+/* 卡片网格布局 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* 卡片基类 */
+.card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+/* 高亮/可用卡片 */
+.card.active {
+  cursor: pointer;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.card.active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 0), rgba(59, 130, 246, 0.08), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.card.active:hover {
+  transform: translateY(-4px);
+  background: var(--card-bg-hover);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+.card.active:hover::before {
+  opacity: 1;
+}
+
+/* 禁用/待上线卡片 */
+.card.disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+  background: var(--card-bg);
+  border-style: dashed;
+}
+.card.disabled:hover {
+  border-color: var(--border);
+  transform: none;
+}
+
+/* 卡片顶部元信息 */
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+.status-pill.ready {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+.status-pill.waiting {
+  background: var(--pending-bg);
+  color: var(--pending);
+  border: 1px solid var(--pending-border);
+}
+
+/* 状态呼吸圆点 */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: relative;
+}
+.status-pill.ready .dot { background: var(--success); }
+.status-pill.ready .dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.status-pill.waiting .dot { background: var(--pending); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0; transform: scale(2.2); }
+}
+
+/* 时间日期 */
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 14px;
+}
+
+/* 描述文本与范围微标签 */
+.desc {
+  color: var(--text-sub);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.tag {
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+
+/* 卡片底部操作区域 */
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.code-path {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--primary);
+  transition: gap 0.2s ease;
+}
+.card.active:hover .action-link {
+  gap: 8px;
+}
+.disabled-hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 页脚 */
+footer {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.footer-right {
+  display: inline-flex;
+  gap: 16px;
 }
 </style>
 </head>
 <body>
+
+<div class="ambient-grid"></div>
+
 <div class="wrap">
-<header>
-  <h1>ICS 备考刷题台</h1>
-  <div class="topbadge">Powered by Sept, 2026.</div>
-  <p class="sub">北京大学《计算机系统导论》2026 秋 · 四场考试</p>
-  <div class="rule"></div>
-</header>
-
-<a class="card" href="./stage1/">
-  <div class="row">
-    <h2>第一次阶段测验</h2>
-    <span class="st ok">已上线</span>
+  <!-- 顶部状态栏 -->
+  <div class="top-nav">
+    <div class="brand-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      ICS 2026 秋 · Peking University · Powered by Sept.
+    </div>
+    <button class="theme-btn" id="themeToggle" title="切换深浅主题" aria-label="切换主题">
+      <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
   </div>
-  <div class="date">2026-10-12 周一 13:00</div>
-  <p>第 1–8 讲 · 2025 阶段测验全卷 + 2012–2024 期中 + 2013–2024 期末补充，共 194 题</p>
-  <div class="path">/ics/stage1/</div>
-  <div class="go">进入刷题 →</div>
-</a>
 
-<a class="card disabled">
-  <div class="row">
-    <h2>第二次阶段测验</h2>
-    <span class="st soon">待生成</span>
+  <!-- 标题区 -->
+  <header>
+    <h1>ICS 备考刷题台</h1>
+    <div class="sub">
+      <span>计算机系统导论备考综合平台</span>
+      <span class="sub-divider"></span>
+      <span>4 场全周期考试</span>
+      <span class="sub-divider"></span>
+      <span>阶段一 194 题已收录</span>
+    </div>
+  </header>
+
+  <!-- 考试卡片网格 -->
+  <div class="grid">
+    <!-- 阶段测验 1 (活跃) -->
+    <a class="card active" href="./stage1/">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">第一次阶段测验</h2>
+          <span class="status-pill ready">
+            <span class="dot"></span>已就绪
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-10-12 周一 13:00
+        </div>
+        <div class="tags">
+          <span class="tag">第 1–8 讲</span>
+          <span class="tag">共 194 题</span>
+          <span class="tag">含 2012-2025 全真题</span>
+        </div>
+        <p class="desc">
+          涵盖 2025 阶段测验全卷、2012–2024 期中核心真题及期末补充题。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/stage1/</span>
+        <span class="action-link">
+          进入刷题
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 阶段测验 2 -->
+    <div class="card disabled">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">第二次阶段测验</h2>
+          <span class="status-pill waiting">
+            <span class="dot"></span>制作中
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-11-16 周一 13:00
+        </div>
+        <div class="tags">
+          <span class="tag">第 10–18 讲</span>
+        </div>
+        <p class="desc">
+          涵盖 Y86-64 架构、HCL 硬件控制语言、处理器流水线冒险、高速缓存 Cache、链接机制与 ECF。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/stage2/</span>
+        <span class="disabled-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          题库生成中
+        </span>
+      </div>
+    </div>
+
+    <!-- LAB 测验 -->
+    <div class="card disabled">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">LAB 测验</h2>
+          <span class="status-pill waiting">
+            <span class="dot"></span>制作中
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-12-24 周四
+        </div>
+        <div class="tags">
+          <span class="tag">L0 – L8 全实验</span>
+        </div>
+        <p class="desc">
+          聚焦 Linux 基础、底层工具链 (GDB/Objdump/Make) 以及 8 个 lab。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/lab/</span>
+        <span class="disabled-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          题库生成中
+        </span>
+      </div>
+    </div>
+
+    <!-- 期末考试 -->
+    <div class="card disabled">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">期末考试</h2>
+          <span class="status-pill waiting">
+            <span class="dot"></span>制作中
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-12-28 周一
+        </div>
+        <div class="tags">
+          <span class="tag">全学期综合</span>
+        </div>
+        <p class="desc">
+          全课程知识点归总：重点覆盖系统级 I/O、虚拟内存管理与地址翻译、网络编程基础、并发与同步互斥。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/final/</span>
+        <span class="disabled-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          学期末开放
+        </span>
+      </div>
+    </div>
   </div>
-  <div class="date">2026-11-16 周一</div>
-  <p>第 10–18 讲 · Y86-64 / HCL / 流水线 / Cache / 链接 / ECF</p>
-  <div class="path">/ics/stage2/</div>
-</a>
 
-<a class="card disabled">
-  <div class="row">
-    <h2>LAB 测验</h2>
-    <span class="st soon">待生成</span>
-  </div>
-  <div class="date">2026-12-24 周四</div>
-  <p>L0–L8 · Linux / 工具链 / 8 个 Lab 的「做了什么 + 为什么」</p>
-  <div class="path">/ics/lab/</div>
-</a>
-
-<a class="card disabled">
-  <div class="row">
-    <h2>期末考试</h2>
-    <span class="st soon">待生成</span>
-  </div>
-  <div class="date">2026-12-28 周一</div>
-  <p>全学期 · 系统级 I/O / 虚拟内存 / 网络 / 并发与同步</p>
-  <div class="path">/ics/final/</div>
-</a>
-
-<footer>更新于 <time data-updated>2026-10-09 00:23</time>（UTC+8）</footer>
+  <!-- 页脚 -->
+  <footer>
+    <div>更新于 <time data-updated>2026-10-09 10:14</time>（UTC+8）</div>
+    <div class="footer-right">
+      <span>ICS 备考刷题台</span>
+      <span>·</span>
+      <span>SEPT</span>
+    </div>
+  </footer>
 </div>
+
+<script>
+  // 主题自动检测与切换
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  
+  function getPreferredTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function setTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    toggleBtn.innerHTML = theme === 'dark' 
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+
+  setTheme(getPreferredTheme());
+
+  toggleBtn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') || 'light';
+    setTheme(current === 'light' ? 'dark' : 'light');
+  });
+
+  // 鼠标卡片微光跟随效果
+  document.querySelectorAll('.card.active').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+</script>
 </body>
 </html>
