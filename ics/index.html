@@ -430,6 +430,14 @@ footer {
 .log li:first-child {
   border-top: 0;
 }
+.log li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.log li > div > div {
+  line-height: 1.5;
+}
 .log time {
   flex: 0 0 88px;
   color: var(--text-muted);
@@ -590,17 +598,25 @@ footer {
   <section class="log">
     <h2>更新记录</h2>
     <ul>
-      <li><time>2026-10-09</time><span>刷题体验优化：续做定位、倒计时与界面细节</span></li>
-      <li><time>2026-10-09</time><span>修正若干题目的代码问题</span></li>
-      <li><time>2026-10-09</time><span>首页改版</span></li>
-      <li><time>2026-10-08</time><span>题库与判题系统完善</span></li>
-      <li><time>2026-10-08</time><span>阶段一 194 题上线</span></li>
+      <li><time>2026-10-09</time>
+        <div>
+          <div>刷题体验优化：续做定位、倒计时与界面细节</div>
+          <div>修正若干题目的代码与判分问题</div>
+          <div>首页改版</div>
+        </div>
+      </li>
+      <li><time>2026-10-08</time>
+        <div>
+          <div>题库与判题系统完善</div>
+          <div>阶段一 194 题上线</div>
+        </div>
+      </li>
     </ul>
   </section>
 
   <!-- 页脚 -->
   <footer>
-    <div>更新于 <time data-updated>2026-10-09 23:36</time>（UTC+8）</div>
+    <div>更新于 <time data-updated>2026-10-09 23:45</time>（UTC+8）</div>
     <div class="footer-right">
       <span>ICS 备考刷题台</span>
       <span>·</span>
