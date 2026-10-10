@@ -293,6 +293,11 @@ h1 {
   color: var(--pending);
   border: 1px solid var(--pending-border);
 }
+.status-pill.partial {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
 
 /* 状态呼吸圆点 */
 .dot {
@@ -311,6 +316,7 @@ h1 {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 .status-pill.waiting .dot { background: var(--pending); }
+.status-pill.partial .dot { background: var(--primary); }
 
 @keyframes pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
@@ -469,7 +475,7 @@ footer {
       <span class="sub-divider"></span>
       <span>4 场全周期考试</span>
       <span class="sub-divider"></span>
-      <span>阶段一 227 题已收录</span>
+      <span>阶段一 203 题 · 阶段二 24 题已收录</span>
     </div>
   </header>
 
@@ -489,12 +495,12 @@ footer {
           2026-10-12 周一 13:00
         </div>
         <div class="tags">
-          <span class="tag">第 1–17 讲</span>
-          <span class="tag">共 227 题</span>
+          <span class="tag">第 1–8 讲</span>
+          <span class="tag">共 203 题</span>
           <span class="tag">含 2012-2025 全真题</span>
         </div>
         <p class="desc">
-          涵盖 2025 两次阶段测验、2012–2024 期中核心真题及期末补充题。
+          涵盖 2025 第一次阶段测验、2012–2024 期中核心真题及 2013–2025 期末补充题。
         </p>
       </div>
       <div class="card-foot">
@@ -506,13 +512,13 @@ footer {
       </div>
     </a>
 
-    <!-- 阶段测验 2 -->
-    <div class="card disabled">
+    <!-- 阶段测验 2 (活跃) -->
+    <a class="card active" href="./stage2/">
       <div>
         <div class="card-head">
           <h2 class="card-title">第二次阶段测验</h2>
-          <span class="status-pill waiting">
-            <span class="dot"></span>制作中
+          <span class="status-pill partial">
+            <span class="dot"></span>部分就绪
           </span>
         </div>
         <div class="date-row">
@@ -520,20 +526,22 @@ footer {
           2026-11-16 周一 13:00
         </div>
         <div class="tags">
-          <span class="tag">第 10–18 讲</span>
+          <span class="tag">第 9–17 讲</span>
+          <span class="tag">共 24 题</span>
+          <span class="tag">2025 第二次阶段测验</span>
         </div>
         <p class="desc">
-          涵盖 Y86-64 架构、HCL 硬件控制语言、处理器流水线冒险、高速缓存 Cache、链接机制与 ECF。
+          2025 第二次阶段测验全卷：Y86-64 与 ISA、HCL 与 SEQ、流水线与数据冒险、存储层次与 Cache、链接与重定位、异常与进程，含原卷插图。
         </p>
       </div>
       <div class="card-foot">
         <span class="code-path">/ics/stage2/</span>
-        <span class="disabled-hint">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          题库生成中
+        <span class="action-link">
+          进入刷题
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </span>
       </div>
-    </div>
+    </a>
 
     <!-- LAB 测验 -->
     <div class="card disabled">
@@ -600,8 +608,8 @@ footer {
     <ul>
       <li><time>2026-10-10</time>
         <div>
+          <div>「2025 第二次阶段测验」独立成 stage2 页面（24 题），stage1 恢复为第 1–8 讲</div>
           <div>补录历年期末卷第 1–8 讲真题 9 题（2025 期末 7 题、2019 期末 2 题）</div>
-          <div>并入「2025 第二次阶段测验」24 题（新增第 9–17 讲范围）</div>
           <div>修正部分题目的判分问题</div>
         </div>
       </li>
@@ -623,7 +631,7 @@ footer {
 
   <!-- 页脚 -->
   <footer>
-    <div>更新于 <time data-updated>2026-10-10 15:15</time>（UTC+8）</div>
+    <div>更新于 <time data-updated>2026-10-10 15:32</time>（UTC+8）</div>
     <div class="footer-right">
       <span>ICS 备考刷题台</span>
       <span>·</span>
