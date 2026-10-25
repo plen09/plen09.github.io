@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据结构与算法 A · 复习站</title>
+  <meta name="description" content="从课程课件、六次书面作业、习题讲解与 OJ 练习整理的《数据结构与算法 A》复习站">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">DSA</span>
+      <div class="brand-text">
+        <strong>数据结构与算法 A</strong>
+        <span>课件 · 作业 · 习题讲解 · 复习</span>
+      </div>
+    </div>
+
+    <label class="search" for="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16.5 16.5 4 4"></path></svg>
+      <input id="search" type="search" placeholder="搜索知识点、题目、公式…   按 / 聚焦" autocomplete="off">
+      <kbd>/</kbd>
+      <button id="searchClear" class="search-clear" type="button" title="清空搜索" hidden>×</button>
+    </label>
+
+    <div class="top-actions">
+      <button id="randomBtn" class="btn btn-primary" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l3 4M4 17h3l10-14h3M14 17l3-4M20 7l-3 4"></path></svg>
+        随机抽题
+      </button>
+      <button id="themeBtn" class="btn btn-ghost icon-only" type="button" title="切换主题" aria-label="切换主题">
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"></path></svg>
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <nav id="chapterNav" class="chapter-nav" aria-label="章节"></nav>
+
+      <section class="progress-card" aria-label="复习进度">
+        <div class="progress-head">
+          <span>复习进度</span>
+          <strong id="progressPct">0%</strong>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <div class="progress-meta">
+          <span id="progressText">0 / 0</span>
+          <button id="resetBtn" class="link-btn" type="button">重置</button>
+        </div>
+      </section>
+
+      <section class="side-note">
+        <h4>资料范围</h4>
+        <p>第 1–7 章课件 · 六次书面作业 · 前三章习题讲解 · OJ 练习 · 课程作业说明</p>
+        <p class="muted">练习题均给出可展开的参考解答；勾选“已掌握”会保存在本机浏览器中。</p>
+      </section>
+    </aside>
+
+    <main id="main" class="main">
+      <section id="chapterHead" class="chapter-head"></section>
+
+      <div class="toolbar">
+        <div class="view-tabs" role="tablist" aria-label="内容类型">
+          <button class="tab is-active" data-view="all" role="tab">全部</button>
+          <button class="tab" data-view="knowledge" role="tab">知识点</button>
+          <button class="tab" data-view="questions" role="tab">题目</button>
+          <button class="tab" data-view="cheats" role="tab">速查</button>
+          <button class="tab" data-view="source" role="tab">课件原文</button>
+        </div>
+
+        <div class="toolbar-right">
+          <div id="typeFilter" class="chips" aria-label="题目来源"></div>
+          <label class="switch">
+            <input id="unmasteredOnly" type="checkbox">
+            <span>只看未掌握</span>
+          </label>
+          <button id="expandBtn" class="btn btn-ghost" type="button" hidden>展开全部解答</button>
+        </div>
+      </div>
+
+      <div id="resultMeta" class="result-meta" hidden></div>
+      <section id="cards" class="cards" aria-live="polite"></section>
+      <div id="empty" class="empty" hidden>
+        <strong>没有匹配的内容</strong>
+        <p>试试其他关键词，或清除章节、来源筛选。</p>
+        <button id="clearFilters" class="btn btn-ghost" type="button">清除筛选</button>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>内容整理自 <code>dsa/slide</code>、<code>dsa/hw</code> 与课程作业说明；公式与结论以课件和作业讲解为准。</p>
+    <p class="muted">离线可用 · 进度保存在本机 · 不依赖网络资源</p>
+  </footer>
+
+  <dialog id="quizDialog" class="quiz-dialog">
+    <div class="quiz-head">
+      <div>
+        <span class="eyebrow">随机抽题</span>
+        <h3 id="quizSource">—</h3>
+      </div>
+      <button id="quizClose" class="icon-btn" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="quizBody" class="quiz-body"></div>
+    <div class="quiz-actions">
+      <button id="quizReveal" class="btn btn-primary" type="button">查看解答</button>
+      <button id="quizNext" class="btn btn-ghost" type="button">换一题</button>
+    </div>
+  </dialog>
+
+  <script src="data/slides.js"></script>
+  <script src="data/ch1.js"></script>
+  <script src="data/ch2.js"></script>
+  <script src="data/ch3.js"></script>
+  <script src="data/ch4.js"></script>
+  <script src="data/ch5.js"></script>
+  <script src="data/ch6.js"></script>
+  <script src="data/ch7.js"></script>
+  <script src="data/appendix.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
