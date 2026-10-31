@@ -1,36 +1,720 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ICS 备考刷题台 · Plenilune</title>
+<script>
+  // 提前定主题，避免深色偏好下先闪一下浅色
+  try {
+    var savedTheme = localStorage.getItem('theme');
+    var preferred = savedTheme || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', preferred);
+  } catch (e) {}
+</script>
 <style>
-.topbadge{display:inline-block;padding:3px 14px;border-radius:999px;font-size:13.5px;font-weight:700;letter-spacing:.05em;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent);margin-bottom:18px}
-:root{--bg:#f5f6fa;--panel:#fff;--ink:#1b2333;--muted:#727c8f;--line:#e4e8f0;--accent:#2f6fed;--accent-2:#1b54c8;--accent-soft:#eaf1ff;--ok:#12855f;--okbg:#e6f6ef;--warn:#c9701b;--warnbg:#fdf0e2}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
-.wrap{max-width:980px;margin:0 auto;padding:48px 20px 80px}
-h1{font-size:26px;margin:0 0 6px}.sub{color:var(--muted);margin:0 0 28px}
-.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(21,32,56,.05),0 8px 24px -18px rgba(21,32,56,.35);transition:.15s}
-.card:hover{transform:translateY(-2px);border-color:var(--accent)}
-.card.disabled{opacity:.72;cursor:default}.card.disabled:hover{transform:none;border-color:var(--line)}
-.row{display:flex;align-items:center;gap:10px}.row h2{font-size:17px;margin:0}
-.date{color:var(--muted);font-size:13px;margin:0 0 6px}.card p{margin:0 0 8px;color:#3d4757;font-size:14px}
-.path{font:12.5px "SFMono-Regular",Consolas,Menlo,monospace;color:var(--muted)}
-.go{margin-top:10px;color:var(--accent-2);font-size:13.5px;font-weight:600}
-.st{font-size:12px;padding:1px 8px;border-radius:999px}.st.ok{background:var(--okbg);color:var(--ok)}.st.soon{background:var(--warnbg);color:var(--warn)}
-footer{margin-top:32px;color:var(--muted);font-size:13px}footer a{color:var(--accent)}
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Light Theme */
+  --bg: #f8fafc;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-bg-hover: #ffffff;
+  --panel: #ffffff;
+  --border: rgba(226, 232, 240, 0.9);
+  --border-hover: rgba(59, 130, 246, 0.4);
+  --border-focus: #3b82f6;
+
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-muted: #94a3b8;
+
+  --primary: #2563eb;
+  --primary-light: #eff6ff;
+  --primary-border: #bfdbfe;
+
+  --success: #059669;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+
+  --pending: #d97706;
+  --pending-bg: #fffbeb;
+  --pending-border: #fde68a;
+
+  --muted: #94a3b8;
+  --muted-bg: rgba(148, 163, 184, 0.16);
+  --muted-border: rgba(148, 163, 184, 0.35);
+
+  --glow-1: rgba(37, 99, 235, 0.08);
+  --glow-2: rgba(16, 185, 129, 0.06);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-card-hover: 0 20px 35px -10px rgba(37, 99, 235, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] {
+  --bg: #090d16;
+  --card-bg: rgba(17, 24, 39, 0.7);
+  --card-bg-hover: rgba(24, 33, 53, 0.85);
+  --panel: #111827;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(96, 165, 250, 0.4);
+
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --text-muted: #64748b;
+
+  --primary: #60a5fa;
+  --primary-light: rgba(37, 99, 235, 0.18);
+  --primary-border: rgba(96, 165, 250, 0.3);
+
+  --success: #34d399;
+  --success-bg: rgba(5, 150, 105, 0.15);
+  --success-border: rgba(52, 211, 153, 0.3);
+
+  --pending: #fbbf24;
+  --pending-bg: rgba(217, 119, 6, 0.15);
+  --pending-border: rgba(251, 191, 36, 0.3);
+
+  --muted: #64748b;
+  --muted-bg: rgba(148, 163, 184, 0.16);
+  --muted-border: rgba(148, 163, 184, 0.28);
+
+  --glow-1: rgba(59, 130, 246, 0.12);
+  --glow-2: rgba(16, 185, 129, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 20px 35px -10px rgba(0, 0, 0, 0.5), 0 0 20px 0 var(--glow-1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 背景光效与微妙网格 */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    radial-gradient(circle at 18% 10%, var(--glow-1) 0%, transparent 45%),
+    radial-gradient(circle at 82% 15%, var(--glow-2) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ambient-grid {
+  position: fixed;
+  inset: 0;
+  background-size: 32px 32px;
+  background-image: linear-gradient(to right, var(--border) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 10%, black 15%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 10%, black 15%, transparent 80%);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+/* 顶部操作条 */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+}
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+  backdrop-filter: blur(8px);
+}
+.theme-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+.theme-btn:hover {
+  color: var(--text-main);
+  border-color: var(--text-muted);
+  transform: scale(1.05);
+}
+
+/* 页面标题 */
+header {
+  margin-bottom: 40px;
+}
+h1 {
+  font-size: clamp(28px, 4.5vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--text-sub));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sub {
+  color: var(--text-sub);
+  font-size: 15.5px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sub-divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+/* 卡片网格布局 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* 卡片基类 */
+.card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+/* 高亮/可用卡片 */
+.card.active {
+  cursor: pointer;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.card.active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 0), rgba(59, 130, 246, 0.08), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.card.active:hover {
+  transform: translateY(-4px);
+  background: var(--card-bg-hover);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+.card.active:hover::before {
+  opacity: 1;
+}
+
+/* 禁用/待上线卡片 */
+.card.disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+  background: var(--card-bg);
+  border-style: dashed;
+}
+.card.disabled:hover {
+  border-color: var(--border);
+  transform: none;
+}
+
+/* 卡片顶部元信息 */
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+.status-pill.ready {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+.status-pill.waiting {
+  background: var(--pending-bg);
+  color: var(--pending);
+  border: 1px solid var(--pending-border);
+}
+.status-pill.partial {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+.status-pill.ended {
+  background: var(--muted-bg);
+  color: var(--text-sub);
+  border: 1px solid var(--muted-border);
+}
+
+/* 状态呼吸圆点 */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: relative;
+}
+.status-pill.ready .dot { background: var(--success); }
+.status-pill.ready .dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.status-pill.waiting .dot { background: var(--pending); }
+.status-pill.partial .dot { background: var(--primary); }
+.status-pill.ended .dot { background: var(--muted); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0; transform: scale(2.2); }
+}
+
+/* 时间日期 */
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 14px;
+}
+
+/* 描述文本与范围微标签 */
+.desc {
+  color: var(--text-sub);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.tag {
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+
+/* 卡片底部操作区域 */
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.code-path {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--primary);
+  transition: gap 0.2s ease;
+}
+.card.active:hover .action-link {
+  gap: 8px;
+}
+.disabled-hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 页脚 */
+footer {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.footer-right {
+  display: inline-flex;
+  gap: 16px;
+}
+
+/* 更新记录（朴素版：一条一行，不要卡片） */
+.log {
+  margin-top: 48px;
+}
+.log h2 {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.log ul {
+  list-style: none;
+}
+.log li {
+  display: flex;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: 13.5px;
+  color: var(--text-sub);
+  border-top: 1px solid var(--border);
+}
+.log li:first-child {
+  border-top: 0;
+}
+.log li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.log li > div > div {
+  line-height: 1.5;
+}
+.log time {
+  flex: 0 0 88px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
 </style>
 </head>
 <body>
+
+<div class="ambient-grid"></div>
+
 <div class="wrap">
-<h1>ICS 备考刷题台</h1>
-<div class="topbadge">Powered by Sept, 2026.</div>
-<p class="sub">北京大学《计算机系统导论》2026 秋 · 四场考试逐题刷题网页（单文件离线可用，进度与草稿存在浏览器本地）</p>
-<a class="card" href="./stage1/"><div class="row"><h2>第一次阶段测验</h2><span class="st ok">已上线</span></div><div class="date">2026-10-12 周一</div><p>第 1–8 讲 · 2025 阶段测验全卷 + 2012–2024 期中 + 2013–2024 期末补充（193 题）</p><div class="path">/ics/stage1/</div><div class="go">进入刷题 →</div></a>
-<a class="card" href="./stage2/"><div class="row"><h2>第二次阶段测验</h2><span class="st ok">已上线</span></div><div class="date">2026-11-16 周一</div><p>第 10–18 讲 · Y86-64 / HCL / 流水线 / Cache / 链接 / ECF</p><div class="path">/ics/stage2/</div><div class="go">进入刷题 →</div></a>
-<div class="card disabled"><div class="row"><h2>LAB 测验</h2><span class="st soon">待生成</span></div><div class="date">2026-12-24 周四</div><p>L0–L8 · Linux / 工具链 / 8 个 Lab 的「做了什么 + 为什么」</p><div class="path">/ics/lab/</div><div class="go">还没生成</div></div>
-<div class="card disabled"><div class="row"><h2>期末考试</h2><span class="st soon">待生成</span></div><div class="date">2026-12-28 周一</div><p>全学期 · 系统级 I/O / 虚拟内存 / 网络 / 并发与同步</p><div class="path">/ics/final/</div><div class="go">还没生成</div></div>
-<footer>更新于 2026-10-31 · 题目与答案来自课程往年题，仅供本人复习使用</footer>
+  <!-- 顶部状态栏 -->
+  <div class="top-nav">
+    <div class="brand-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      ICS 2026 秋 · Peking University · Powered by Sept.
+    </div>
+    <button class="theme-btn" id="themeToggle" title="切换深浅主题" aria-label="切换主题">
+      <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+
+  <!-- 标题区 -->
+  <header>
+    <h1>ICS 备考</h1>
+    <div class="sub">
+      <span>刷题台</span>
+      <span class="sub-divider"></span>
+      <span>Stage 1/2 & LABtest & FINAL</span>
+      <span class="sub-divider"></span>
+      <span>阶段一 203 题 · 阶段二 24 题已收录</span>
+    </div>
+  </header>
+
+  <!-- 考试卡片网格 -->
+  <div class="grid">
+    <!-- 阶段测验 1 (已结束) -->
+    <a class="card active" href="./stage1/">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">第一次阶段测验</h2>
+          <span class="status-pill ended">
+            <span class="dot"></span>已结束
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-10-12 周一 13:00
+        </div>
+        <div class="tags">
+          <span class="tag">第 1–8 讲</span>
+          <span class="tag">共 203 题</span>
+          <span class="tag">含 2012-2025 全真题</span>
+        </div>
+        <p class="desc">
+          涵盖 2025 第一次阶段测验、2012–2024 期中核心真题及 2013–2025 期末补充题。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/stage1/</span>
+        <span class="action-link">
+          进入刷题
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 阶段测验 2 (活跃) -->
+    <a class="card active" href="./stage2/">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">第二次阶段测验</h2>
+          <span class="status-pill partial">
+            <span class="dot"></span>部分就绪
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-11-16 周一 13:00
+        </div>
+        <div class="tags">
+          <span class="tag">第 9–17 讲</span>
+          <span class="tag">共 24 题</span>
+          <span class="tag">2025 第二次阶段测验</span>
+        </div>
+        <p class="desc">
+          2025 第二次阶段测验全卷：Y86-64 与 ISA、HCL 与 SEQ、流水线与数据冒险、存储层次与 Cache、链接与重定位、异常与进程，含原卷插图。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/stage2/</span>
+        <span class="action-link">
+          进入刷题
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- LAB 测验 -->
+    <div class="card disabled">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">LAB 测验</h2>
+          <span class="status-pill waiting">
+            <span class="dot"></span>制作中
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-12-24 周四
+        </div>
+        <div class="tags">
+          <span class="tag">L0 – L8 全实验</span>
+        </div>
+        <p class="desc">
+          聚焦 Linux 基础、底层工具链 (GDB/Objdump/Make) 以及 8 个 lab。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/lab/</span>
+        <span class="disabled-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          题库生成中
+        </span>
+      </div>
+    </div>
+
+    <!-- 期末考试 -->
+    <div class="card disabled">
+      <div>
+        <div class="card-head">
+          <h2 class="card-title">期末考试</h2>
+          <span class="status-pill waiting">
+            <span class="dot"></span>制作中
+          </span>
+        </div>
+        <div class="date-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          2026-12-28 周一
+        </div>
+        <div class="tags">
+          <span class="tag">全学期综合</span>
+        </div>
+        <p class="desc">
+          全课程知识点归总：重点覆盖系统级 I/O、虚拟内存管理与地址翻译、网络编程基础、并发与同步互斥。
+        </p>
+      </div>
+      <div class="card-foot">
+        <span class="code-path">/ics/final/</span>
+        <span class="disabled-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          学期末开放
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 更新记录 -->
+  <section class="log">
+    <h2>更新记录</h2>
+    <ul>
+      <li><time>2026-10-31</time>
+        <div>
+          <div>刷题页整体精简改版</div>
+          <div>新增 DSA 期中刷题页</div>
+        </div>
+      </li>
+      <li><time>2026-10-13</time>
+        <div>
+          <div>第一次阶段测验标记为已结束</div>
+        </div>
+      </li>
+      <li><time>2026-10-11</time>
+        <div>
+          <div>补全 2023 期中 B27 卷积插图</div>
+          <div>补回 2021 期中 B48 缺失题干</div>
+          <div>修复插图显示问题</div>
+          <div>复核全库判分：修正 B112、B67 的空与答案错配</div>
+        </div>
+      </li>
+      <li><time>2026-10-10</time>
+        <div>
+          <div>单题模式停在当前题并去掉多余按钮</div>
+          <div>增加复习模式并隐藏打印入口</div>
+          <div>增加题目反馈入口</div>
+          <div>放宽汇编后缀判定</div>
+          <div>第二次阶段测验独立成页</div>
+          <div>补录期末卷第 1–8 讲真题</div>
+          <div>修正判分与题干问题</div>
+        </div>
+      </li>
+      <li><time>2026-10-09</time>
+        <div>
+          <div>优化续做定位与界面细节</div>
+          <div>修正代码与判分问题</div>
+          <div>首页改版</div>
+        </div>
+      </li>
+      <li><time>2026-10-08</time>
+        <div>
+          <div>完善题库与判题系统</div>
+          <div>阶段一题库上线</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 页脚 -->
+  <footer>
+    <div>更新于 <time data-updated>2026-10-31</time>（UTC+8）</div>
+    <div class="footer-right">
+      <span>ICS 备考刷题台</span>
+      <span>·</span>
+      <a href="https://github.com/plen09/plen09.github.io/issues" target="_blank" rel="noopener">问题反馈</a>
+      <span>·</span>
+      <span>SEPT</span>
+    </div>
+  </footer>
 </div>
+
+<script>
+  // 主题自动检测与切换
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  
+  function getPreferredTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function setTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    toggleBtn.innerHTML = theme === 'dark' 
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+
+  setTheme(getPreferredTheme());
+
+  toggleBtn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') || 'light';
+    setTheme(current === 'light' ? 'dark' : 'light');
+  });
+
+  // 鼠标卡片微光跟随效果
+  document.querySelectorAll('.card.active').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+</script>
 </body>
 </html>
