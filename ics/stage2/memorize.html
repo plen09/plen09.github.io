@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>ICS 默写台 · 第二次阶段测验</title>
+<style>
+:root{
+  --bg:#f5f6fa; --panel:#ffffff; --panel-2:#fbfcfe;
+  --ink:#1b2333; --ink-2:#3d4757; --muted:#727c8f;
+  --line:#e4e8f0; --line-2:#eef1f6;
+  --accent:#2f6fed; --accent-2:#1b54c8; --accent-soft:#eaf1ff;
+  --ok:#12855f; --ok-soft:#e6f6ef;
+  --bad:#c0392b; --bad-soft:#fdecea;
+  --warn:#c9701b; --warn-soft:#fdf0e2;
+  --code-bg:#f6f8fb; --code-ink:#243044;
+  --radius:14px; --radius-s:9px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --shadow:0 1px 2px rgba(21,32,56,.05),0 8px 24px -18px rgba(21,32,56,.35);
+}
+html[data-theme="dark"]{
+  --bg:#10131a; --panel:#171c25; --panel-2:#141922;
+  --ink:#e7ebf3; --ink-2:#c3cad8; --muted:#8e99ad;
+  --line:#28303d; --line-2:#212836;
+  --accent:#7ba4ff; --accent-2:#9cbcff; --accent-soft:#1b2540;
+  --ok:#4cc79a; --ok-soft:#12291f;
+  --bad:#f08a80; --bad-soft:#2c1715;
+  --warn:#e8a25c; --warn-soft:#2c2115;
+  --code-bg:#0d1117; --code-ink:#d6dbe6;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent); text-decoration:none}
+a:hover{text-decoration:underline}
+code,kbd,.mono{font-family:var(--mono)}
+kbd{
+  font-size:11.5px; padding:1px 5px; border:1px solid var(--line);
+  border-bottom-width:2px; border-radius:5px; background:var(--panel-2); color:var(--muted);
+}
+button{
+  font:inherit; font-size:13.5px; cursor:pointer; color:var(--ink);
+  background:var(--panel-2); border:1px solid var(--line);
+  border-radius:var(--radius-s); padding:7px 13px; transition:background .12s,border-color .12s,color .12s;
+}
+button:hover{background:var(--accent-soft); border-color:var(--accent)}
+button:active{transform:translateY(.5px)}
+button.primary{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600}
+button.primary:hover{background:var(--accent-2); border-color:var(--accent-2); color:#fff}
+button.ghost{background:transparent}
+button.small{padding:4px 9px; font-size:12.5px; border-radius:7px}
+button:disabled{opacity:.5; cursor:default; transform:none}
+input[type="text"]{
+  font:inherit; font-size:13.5px; color:var(--ink);
+  background:var(--panel-2); border:1px solid var(--line);
+  border-radius:var(--radius-s); padding:6px 10px; outline:none;
+}
+input[type="text"]:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--panel) 92%, transparent);
+  backdrop-filter:saturate(180%) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:1400px; margin:0 auto; padding:10px 18px;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.brand{display:flex; flex-direction:column; gap:1px; min-width:210px}
+.brand b{font-size:16px; letter-spacing:.2px}
+.brand span{font-size:12px; color:var(--muted)}
+.spacer{flex:1 1 auto}
+.chip{
+  display:inline-flex; align-items:center; gap:5px;
+  padding:2px 9px; border-radius:999px; font-size:12px; line-height:1.7;
+  background:var(--accent-soft); color:var(--accent-2); border:1px solid transparent;
+  white-space:nowrap;
+}
+.chip.muted{background:var(--line-2); color:var(--muted)}
+.chip.ok{background:var(--ok-soft); color:var(--ok)}
+.chip.warn{background:var(--warn-soft); color:var(--warn)}
+.chip.mono{font-family:var(--mono)}
+.brand-badge{
+  display:inline-flex; align-items:center; padding:3px 12px; border-radius:999px;
+  font-size:12.5px; font-weight:600; white-space:nowrap;
+  background:var(--accent-soft); color:var(--accent-2); border:1px solid var(--accent);
+}
+.countdown{font-variant-numeric:tabular-nums; font-weight:600}
+
+/* ---------- 布局 ---------- */
+.layout{
+  max-width:1400px; margin:18px auto 70px; padding:0 18px;
+  display:grid; grid-template-columns:252px minmax(0,1fr); gap:18px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky; top:70px;
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:12px 10px; display:flex; flex-direction:column; gap:12px;
+}
+.side-title{
+  font-size:11.5px; font-weight:700; letter-spacing:.09em; color:var(--muted);
+  text-transform:uppercase; padding:0 8px;
+}
+.nav{display:flex; flex-direction:column; gap:2px}
+.nav button{
+  text-align:left; background:transparent; border:1px solid transparent;
+  padding:8px 10px; border-radius:8px; color:var(--ink-2); font-size:13.5px;
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+}
+.nav button:hover{background:var(--line-2); border-color:transparent}
+.nav button.active{background:var(--accent-soft); color:var(--accent-2); font-weight:600}
+.nav .n-count{font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+.nav button.active .n-count{color:var(--accent-2)}
+.side-opt{
+  display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--muted);
+  padding:3px 8px; cursor:pointer; user-select:none;
+}
+.side-opt input{accent-color:var(--accent)}
+.side-sep{height:1px; background:var(--line-2); margin:0 2px}
+.progress-wrap{padding:0 8px}
+.progress{height:7px; border-radius:999px; background:var(--line-2); overflow:hidden}
+.progress i{display:block; height:100%; width:0; background:var(--accent); border-radius:999px; transition:width .3s}
+.progress-txt{font-size:12px; color:var(--muted); margin-top:5px; display:flex; justify-content:space-between}
+.side-note{font-size:12px; color:var(--muted); padding:0 8px; margin:0; line-height:1.65}
+
+/* ---------- 卡片 ---------- */
+.card{
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:20px 22px; margin-bottom:16px;
+}
+.card.tight{padding:14px 16px}
+.card-head{display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:4px}
+.card-title{font-size:19px; font-weight:700; letter-spacing:.2px; margin:0}
+.card-sub{color:var(--muted); font-size:13px; margin:2px 0 0}
+.card-head .spacer{flex:1 1 auto}
+.hr{height:1px; background:var(--line-2); margin:14px 0}
+
+/* ---------- 指令卡 ---------- */
+.instr-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:2px}
+.instr-name{font-family:var(--mono); font-size:22px; font-weight:700; letter-spacing:.2px}
+.instr-tip{font-size:13px; color:var(--muted); margin:4px 0 0}
+
+table.fedmw{width:100%; border-collapse:separate; border-spacing:0; margin-top:10px}
+table.fedmw th{
+  text-align:left; font-size:11.5px; font-weight:700; letter-spacing:.06em;
+  color:var(--muted); text-transform:uppercase; padding:6px 10px;
+  border-bottom:1px solid var(--line);
+}
+table.fedmw td{padding:11px 10px; border-bottom:1px solid var(--line-2); vertical-align:top}
+table.fedmw tr:last-child td{border-bottom:0}
+table.fedmw td.stage{width:118px; white-space:nowrap}
+.stage-ab{font-family:var(--mono); font-weight:700; font-size:14px; color:var(--accent-2)}
+.stage-cn{font-size:11.5px; color:var(--muted); margin-left:6px}
+.op-row{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:3px 0}
+.lhs{font-family:var(--mono); font-size:13.5px; color:var(--ink-2)}
+.arrow{color:var(--muted); font-size:13px}
+.blank{
+  font-family:var(--mono); font-size:13.5px; color:var(--ink);
+  background:var(--panel-2); border:1px solid var(--line);
+  border-radius:7px; padding:5px 9px; outline:none; min-width:86px;
+  transition:border-color .12s,background .12s,box-shadow .12s;
+}
+.blank:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.blank.ok{border-color:var(--ok); background:var(--ok-soft)}
+.blank.bad{border-color:var(--bad); background:var(--bad-soft)}
+.blank.revealed{border-style:dashed; border-color:var(--ok); background:var(--ok-soft); color:var(--ok)}
+.ans{font-family:var(--mono); font-size:12.5px; color:var(--ok); white-space:pre-wrap}
+.ans[hidden]{display:none}
+.none{color:var(--muted); font-size:13px}
+.op-note{font-size:12px; color:var(--muted)}
+
+/* ---------- 阶段判断 ---------- */
+.gate{
+  margin-top:12px; padding:13px 15px;
+  border:1px solid var(--line); border-radius:12px; background:var(--panel-2);
+}
+.gate.done{border-color:color-mix(in srgb, var(--ok) 38%, var(--line)); background:var(--ok-soft)}
+.gate-head{display:flex; align-items:center; gap:9px; flex-wrap:wrap; font-size:13.5px}
+.gate-sub{font-size:12.5px; color:var(--muted); margin:4px 0 10px}
+.gate-note{font-size:12.5px; color:var(--muted)}
+.gate-stages{display:flex; gap:7px; flex-wrap:wrap}
+.gstage{
+  display:inline-flex; align-items:baseline; gap:6px;
+  padding:6px 11px; border-radius:9px; border:1px solid var(--line);
+  background:var(--panel); color:var(--ink-2); font-size:12.5px;
+}
+.gstage b{font-family:var(--mono); font-size:13.5px}
+.gstage span{font-size:11.5px; color:var(--muted)}
+button.gstage:hover{border-color:var(--accent); background:var(--accent-soft)}
+.gstage.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-2); font-weight:600}
+.gstage.good{border-color:var(--ok); background:var(--ok-soft); color:var(--ok)}
+.gstage.bad{border-color:var(--bad); background:var(--bad-soft); color:var(--bad); text-decoration:line-through}
+.gstage.miss{border-color:var(--warn); background:var(--warn-soft); color:var(--warn); border-style:dashed}
+.gstage.good span,.gstage.bad span,.gstage.miss span{color:inherit; opacity:.8}
+.locked-box{
+  margin-top:14px; padding:22px 16px; text-align:center;
+  border:1px dashed var(--line); border-radius:12px; background:var(--panel-2);
+}
+.locked-box b{display:block; font-size:14px; margin-bottom:3px}
+.locked-box span{font-size:12.5px; color:var(--muted)}
+
+/* ---------- 操作区 ---------- */
+.actions{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-top:16px}
+.feedback{font-size:13.5px; margin-top:10px; min-height:20px}
+.feedback.ok{color:var(--ok)}
+.feedback.bad{color:var(--bad)}
+.strips{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px}
+.pill{
+  font-size:12px; font-family:var(--mono); padding:3px 9px; border-radius:999px;
+  border:1px solid var(--line); background:var(--panel-2); color:var(--ink-2);
+  cursor:pointer; white-space:nowrap;
+}
+.pill:hover{border-color:var(--accent)}
+.pill.cur{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-2); font-weight:700}
+.pill.solid{background:var(--ok-soft); border-color:transparent; color:var(--ok)}
+.pill.shaky{background:var(--warn-soft); border-color:transparent; color:var(--warn)}
+.pill.cur.solid,.pill.cur.shaky{outline:2px solid var(--accent); outline-offset:1px}
+.hint{font-size:12px; color:var(--muted); margin-top:10px}
+kbd{white-space:nowrap}
+
+/* ---------- 分段选择 ---------- */
+.seg{display:flex; gap:4px; flex-wrap:wrap}
+.seg button{padding:5px 11px; font-size:12.5px; border-radius:999px; background:transparent; border:1px solid var(--line); color:var(--ink-2)}
+.seg button:hover{background:var(--accent-soft)}
+.seg button.on{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600}
+.seg button.on:hover{background:var(--accent-2)}
+
+/* ---------- 总览 ---------- */
+.hero{display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:16px}
+.hero-main{padding:24px 24px 22px}
+.hero-main h1{font-size:26px; margin:0 0 6px; letter-spacing:.2px}
+.hero-main p{color:var(--muted); margin:0 0 16px; max-width:56ch}
+.hero-side{padding:18px 20px}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px dashed var(--line-2)}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--muted)}
+.kv b{font-variant-numeric:tabular-nums}
+.mod-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:12px}
+.mod{
+  border:1px solid var(--line); border-radius:var(--radius-s); padding:14px 15px;
+  background:var(--panel-2); cursor:pointer; transition:border-color .12s,transform .12s;
+}
+.mod:hover{border-color:var(--accent); transform:translateY(-1px)}
+.mod b{display:block; font-size:14.5px; margin-bottom:3px}
+.mod p{font-size:12.5px; color:var(--muted); margin:0 0 9px; line-height:1.55}
+.mod .mbar{height:5px; border-radius:999px; background:var(--line); overflow:hidden}
+.mod .mbar i{display:block; height:100%; background:var(--accent); border-radius:999px}
+.mod .mnum{font-size:11.5px; color:var(--muted); margin-top:5px; font-variant-numeric:tabular-nums}
+
+/* ---------- 选择题 ---------- */
+.qtext{font-size:15px; line-height:1.8; margin:6px 0 14px}
+.qtext code{background:var(--code-bg); padding:1px 6px; border-radius:5px; font-size:13.5px}
+.opt{
+  display:flex; gap:10px; align-items:flex-start;
+  border:1px solid var(--line); border-radius:var(--radius-s);
+  padding:9px 12px; margin-bottom:8px; cursor:pointer; background:var(--panel-2);
+  font-size:13.5px; line-height:1.65;
+}
+.opt:hover{border-color:var(--accent)}
+.opt input{margin:3px 0 0; accent-color:var(--accent)}
+.opt.picked{border-color:var(--accent); background:var(--accent-soft)}
+.opt.good{border-color:var(--ok); background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad); background:var(--bad-soft)}
+.why{
+  border-left:3px solid var(--accent); background:var(--accent-soft);
+  padding:10px 14px; border-radius:0 var(--radius-s) var(--radius-s) 0;
+  font-size:13px; color:var(--ink-2); margin-top:12px; white-space:pre-wrap;
+}
+
+/* ---------- 宽表 ---------- */
+.tablewrap{overflow:auto; margin-top:12px; border:1px solid var(--line); border-radius:var(--radius-s)}
+table.grid{width:100%; border-collapse:collapse; font-size:13.5px}
+table.grid th,table.grid td{padding:8px 10px; border-bottom:1px solid var(--line-2); text-align:left; vertical-align:middle}
+table.grid thead th{
+  position:sticky; top:0; background:var(--panel); z-index:1;
+  font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted);
+  border-bottom:1px solid var(--line);
+}
+table.grid tbody tr:hover{background:var(--panel-2)}
+table.grid tbody tr:last-child td{border-bottom:0}
+table.grid td.mono,table.grid th.mono{font-family:var(--mono)}
+table.grid tr.row-ok td{background:var(--ok-soft)}
+table.grid td.cell{min-width:120px}
+table.grid .blank{width:100%; min-width:70px}
+
+/* ---------- 表单网格 ---------- */
+.formgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; margin-top:12px}
+.field{display:flex; flex-direction:column; gap:4px}
+.field label{font-size:12.5px; color:var(--muted)}
+.field .blank{width:100%}
+.statline{display:flex; gap:18px; flex-wrap:wrap; font-size:13.5px; margin-top:12px}
+.statline b{font-variant-numeric:tabular-nums}
+.cache-tbl td,.cache-tbl th{font-family:var(--mono); font-size:12.5px}
+
+/* ---------- 缓存模拟 ---------- */
+.hm{display:flex; gap:4px}
+.hm button{padding:3px 10px; font-size:12.5px; border-radius:7px; background:transparent; border:1px solid var(--line); color:var(--muted)}
+.hm button.on-h{background:var(--ok-soft); border-color:var(--ok); color:var(--ok); font-weight:700}
+.hm button.on-m{background:var(--bad-soft); border-color:var(--bad); color:var(--bad); font-weight:700}
+.hm button.on-h.on-m{outline:none}
+tr.step-ok td{background:var(--ok-soft)}
+tr.step-bad td{background:var(--bad-soft)}
+
+/* ---------- 速查 ---------- */
+details.ref{border:1px solid var(--line); border-radius:var(--radius-s); margin-bottom:10px; background:var(--panel-2); overflow:hidden}
+details.ref>summary{
+  cursor:pointer; padding:11px 14px; font-weight:600; font-size:14px;
+  list-style:none; display:flex; align-items:center; gap:8px;
+}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+"; font-family:var(--mono); color:var(--muted); width:12px}
+details.ref[open]>summary::before{content:"−"}
+details.ref .refbody{padding:0 14px 14px}
+.formula{
+  font-family:var(--mono); font-size:13px; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:8px; padding:9px 12px; margin:8px 0;
+  white-space:pre-wrap; color:var(--code-ink);
+}
+
+@media (max-width: 980px){
+  .layout{grid-template-columns:1fr; margin-top:12px}
+  .sidebar{position:static; flex-direction:row; flex-wrap:wrap; align-items:center; gap:6px; padding:8px}
+  .sidebar .side-sep,.sidebar .progress-wrap,.sidebar .side-note,.sidebar .side-title{display:none}
+  .nav{flex-direction:row; flex-wrap:wrap}
+  .nav .n-count{display:none}
+  .hero{grid-template-columns:1fr}
+  .card{padding:16px 14px}
+  .topbar-inner{padding:9px 12px; gap:8px}
+  .brand{min-width:0}
+  .brand span{display:none}
+  table.fedmw td.stage{width:78px}
+  .blank{min-width:70px; max-width:100%}
+}
+@media print{
+  .topbar,.sidebar,.actions,.strips,.hint{display:none !important}
+  .layout{display:block; max-width:none; margin:0; padding:0}
+  .card{box-shadow:none; border-color:#ccc; break-inside:avoid}
+  .blank{border:0; border-bottom:1px solid #999; border-radius:0; background:transparent}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <b>ICS · 默写台</b>
+      <span><a href="./" title="返回第二次阶段测验刷题页">← 阶段测验 2 刷题</a> · <a href="../" title="返回 ICS 题库首页">ICS 题库</a></span>
+    </div>
+    <span class="chip mono" id="examChip">第二次阶段测验 2026-11-16</span>
+    <span class="chip warn countdown" id="cdChip">倒计时 …</span>
+    <span class="spacer"></span>
+    <span class="chip ok" id="solidChip">已掌握 0 项</span>
+    <button class="ghost small" id="btnTheme" title="切换深色 / 浅色">◐ 主题</button>
+    <span class="brand-badge">Powered by Sept, 2026.</span>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-title">模块</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-sep"></div>
+    <div class="progress-wrap">
+      <div class="progress"><i id="progBar"></i></div>
+      <div class="progress-txt"><span>本次进度</span><span id="progTxt">0 / 0</span></div>
+    </div>
+    <div class="side-sep"></div>
+    <label class="side-opt"><input type="checkbox" id="optAutoNext" checked> 全对后自动下一题</label>
+    <label class="side-opt"><input type="checkbox" id="optOnlyTodo"> 只练未掌握</label>
+    <label class="side-opt"><input type="checkbox" id="optShuffle"> 随机顺序</label>
+    <button class="small ghost" id="btnReset" style="margin:2px 8px 0">重置本页进度</button>
+    <p class="side-note">判分忽略大小写、空格、全角半角与 <code>%</code>；写法不同但等价的答案均可接受。</p>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const o = (l, a, alt) => ({ l, a, alt: alt || [] });
+
+const STAGES = [
+  ['F', 'Fetch', '取指'],
+  ['D', 'Decode', '译码'],
+  ['E', 'Execute', '执行'],
+  ['M', 'Memory', '访存'],
+  ['W', 'Write back', '写回'],
+  ['P', 'PC update', '更新 PC']
+];
+
+const FEDMW = [
+  { id:'irmovq', asm:'irmovq V, rB', kind:'数据传送', code:'30 rB F | V(8)', cc:'不设置', tip:'立即数在取指阶段作为 valC 读出，ALU 用 0+valC 透传，写回 rB。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valC','M8[PC+2]'), o('valP','PC+10')],
+      D:[], E:[o('valE','0 + valC',['valC','valC + 0'])], M:[],
+      W:[o('R[rB]','valE')], P:[o('PC','valP')]
+    }},
+  { id:'rrmovq', asm:'rrmovq rA, rB', kind:'数据传送', code:'20 rA rB', cc:'不设置', tip:'cmovXX 与它共用 icode，仅 ifun 不同；ALU 仍然做加法透传。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valP','PC+2')],
+      D:[o('valA','R[rA]'), o('valB','R[rB]')],
+      E:[o('valE','0 + valA',['valA','valA + 0'])], M:[],
+      W:[o('R[rB]','valE')], P:[o('PC','valP')]
+    }},
+  { id:'cmov', asm:'cmovXX rA, rB', kind:'条件传送', code:'2fn rA rB', cc:'不设置', tip:'先按条件码算出 Cnd，只有 Cnd=1 才写回 rB；不满足时不影响 rB，但 PC 照常更新。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valP','PC+2')],
+      D:[o('valA','R[rA]'), o('valB','R[rB]')],
+      E:[o('valE','0 + valA',['valA','valA + 0']), o('Cnd','Cond(CC, ifun)',['Cond(CC,ifun)'])], M:[],
+      W:[o('R[rB]（仅 Cnd=1）','valE')], P:[o('PC','valP')]
+    }},
+  { id:'opq', asm:'OPq rA, rB', kind:'算术 / 逻辑', code:'6fn rA rB', cc:'设置', tip:'注意顺序是 valB OP valA（B 在前）；valE 决定新的 ZF/SF/OF/CF。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valP','PC+2')],
+      D:[o('valA','R[rA]'), o('valB','R[rB]')],
+      E:[o('valE','valB OP valA',['valB op valA','valA OP valB'])],
+      M:[],
+      W:[o('R[rB]','valE')], P:[o('PC','valP')]
+    }},
+  { id:'jxx', asm:'jXX Dest', kind:'控制转移', code:'7fn | Dest(8)', cc:'不设置', tip:'jXX 不使用 ALU：目标地址就是指令里的绝对地址 valC。跳转与否由 E 阶段算出的 Cnd 决定。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('valC','M8[PC+1]'), o('valP','PC+9')],
+      D:[],
+      E:[o('Cnd','Cond(CC, ifun)',['Cond(CC,ifun)'])], M:[], W:[],
+      P:[o('PC（Cnd=1）','valC'), o('PC（Cnd=0）','valP')]
+    }},
+  { id:'call', asm:'call Dest', kind:'控制转移', cc:'不设置', code:'80 | Dest(8)', tip:'先把新栈顶 valB-8 算出来，再把返回地址 valP 写入栈，最后 %rsp 更新为新栈顶。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('valC','M8[PC+1]'), o('valP','PC+9')],
+      D:[o('valB','R[%rsp]')],
+      E:[o('valE','valB + (-8)',['valB-8','-8 + valB','valB + -8'])],
+      M:[o('M8[valE]','valP')],
+      W:[o('R[%rsp]','valE')], P:[o('PC','valC')]
+    }},
+  { id:'ret', asm:'ret', kind:'控制转移', code:'90', cc:'不设置', tip:'用旧的 %rsp（valA）读返回地址，同时用 valB 算新栈顶；PC 取内存读出的 valM。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('valP','PC+1')],
+      D:[o('valA','R[%rsp]'), o('valB','R[%rsp]')],
+      E:[o('valE','valB + 8',['8 + valB','valB+8'])],
+      M:[o('valM','M8[valA]')],
+      W:[o('R[%rsp]','valE')], P:[o('PC','valM')]
+    }},
+  { id:'pushq', asm:'pushq rA', kind:'栈操作', code:'A0 rA F', cc:'不设置', tip:'先把 %rsp 减 8 得到 valE，再把要压栈的 valA 写到 M8[valE]，最后更新 %rsp。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valP','PC+2')],
+      D:[o('valA','R[rA]'), o('valB','R[%rsp]')],
+      E:[o('valE','valB + (-8)',['valB-8','-8 + valB','valB + -8'])],
+      M:[o('M8[valE]','valA')],
+      W:[o('R[%rsp]','valE')], P:[o('PC','valP')]
+    }},
+  { id:'popq', asm:'popq rA', kind:'栈操作', code:'B0 rA F', cc:'不设置', tip:'官方阶段表：Decode 读两次 %rsp；用旧栈顶 valA 读内存、用 valB+8 算新栈顶；写回先 %rsp 后 rA。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valP','PC+2')],
+      D:[o('valA','R[%rsp]'), o('valB','R[%rsp]')],
+      E:[o('valE','valB + 8',['8 + valB','valB+8'])],
+      M:[o('valM','M8[valA]')],
+      W:[o('R[%rsp]','valE'), o('R[rA]','valM')], P:[o('PC','valP')]
+    }},
+  { id:'mrmovq', asm:'mrmovq D(rB), rA', kind:'访存', code:'50 rA rB | D(8)', cc:'不设置', tip:'SEQ 译码阶段会读出 valA，但这条指令实际不使用它；地址由 valB+valC 得到。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valC','M8[PC+2]'), o('valP','PC+10')],
+      D:[o('valA','R[rA]'), o('valB','R[rB]')],
+      E:[o('valE','valB + valC',['valC + valB'])],
+      M:[o('valM','M8[valE]')],
+      W:[o('R[rA]','valM')], P:[o('PC','valP')]
+    }},
+  { id:'rmmovq', asm:'rmmovq rA, D(rB)', kind:'访存', code:'40 rA rB | D(8)', cc:'不设置', tip:'访存阶段把 valA 写到 M8[valE]；没有写回阶段。基址统一是 rB，硬件只需一条地址加法通路。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('rA:rB','M1[PC+1]'), o('valC','M8[PC+2]'), o('valP','PC+10')],
+      D:[o('valA','R[rA]'), o('valB','R[rB]')],
+      E:[o('valE','valB + valC',['valC + valB'])],
+      M:[o('M8[valE]','valA')], W:[], P:[o('PC','valP')]
+    }},
+  { id:'halt', asm:'halt', kind:'其他', code:'00', cc:'不设置', tip:'停机后状态寄存器 Stat 置为 HLT，PC 不再前进。',
+    st:{
+      F:[o('icode:ifun','M1[PC]')], D:[], E:[], M:[], W:[],
+      P:[o('PC（停机）','PC')]
+    }},
+  { id:'nop', asm:'nop', kind:'其他', code:'10', cc:'不设置', tip:'只做取指与 PC 更新，常用于流水线对齐或实验中的占位。',
+    st:{
+      F:[o('icode:ifun','M1[PC]'), o('valP','PC+1')],
+      D:[], E:[], M:[], W:[],
+      P:[o('PC','valP')]
+    }}
+];
+
+/* 控制信号：PIPE / SEQ 共用的选择信号（d_srcA / d_dstE 等） */
+const SIGNAL_DEFS = [
+  ['srcA', 'A 口读寄存器'],
+  ['srcB', 'B 口读寄存器'],
+  ['dstE', 'ALU 结果写寄存器'],
+  ['dstM', '访存结果写寄存器'],
+  ['aluA', 'ALU 的 A 输入端'],
+  ['aluB', 'ALU 的 B 输入端'],
+  ['setCC', '是否写条件码']
+];
+
+const SIGNALS = [
+  { id:'irmovq', instr:'irmovq V, rB', srcA:'—', srcB:'—', dstE:'rB', dstM:'—', aluA:'valC', aluB:'0', setCC:'0', note:'' },
+  { id:'rrmovq', instr:'rrmovq rA, rB', srcA:'rA', srcB:'—', dstE:'rB', dstM:'—', aluA:'valA', aluB:'0', setCC:'0', note:'dstE 仅在 Cnd=1 时真正写入' },
+  { id:'cmov', instr:'cmovXX rA, rB', srcA:'rA', srcB:'—', dstE:'rB', dstM:'—', aluA:'valA', aluB:'0', setCC:'0', note:'dstE 仅在 Cnd=1 时真正写入' },
+  { id:'opq', instr:'OPq rA, rB', srcA:'rA', srcB:'rB', dstE:'rB', dstM:'—', aluA:'valA', aluB:'valB', setCC:'1', note:'' },
+  { id:'jxx', instr:'jXX Dest', srcA:'—', srcB:'—', dstE:'—', dstM:'—', aluA:'—', aluB:'—', setCC:'0', note:'不使用 ALU' },
+  { id:'call', instr:'call Dest', srcA:'—', srcB:'%rsp', dstE:'%rsp', dstM:'—', aluA:'-8', aluB:'valB', setCC:'0', note:'' },
+  { id:'ret', instr:'ret', srcA:'%rsp', srcB:'%rsp', dstE:'%rsp', dstM:'—', aluA:'+8', aluB:'valB', setCC:'0', note:'' },
+  { id:'pushq', instr:'pushq rA', srcA:'rA', srcB:'%rsp', dstE:'%rsp', dstM:'—', aluA:'-8', aluB:'valB', setCC:'0', note:'' },
+  { id:'popq', instr:'popq rA', srcA:'%rsp', srcB:'%rsp', dstE:'%rsp', dstM:'rA', aluA:'+8', aluB:'valB', setCC:'0', note:'dstM = rA，dstE = %rsp 都要写' },
+  { id:'mrmovq', instr:'mrmovq D(rB), rA', srcA:'—', srcB:'rB', dstE:'—', dstM:'rA', aluA:'valC', aluB:'valB', setCC:'0', note:'读口不用 rA，只有基址 rB' },
+  { id:'rmmovq', instr:'rmmovq rA, D(rB)', srcA:'rA', srcB:'rB', dstE:'—', dstM:'—', aluA:'valC', aluB:'valB', setCC:'0', note:'没有写回' },
+  { id:'halt', instr:'halt', srcA:'—', srcB:'—', dstE:'—', dstM:'—', aluA:'—', aluB:'—', setCC:'0', note:'' },
+  { id:'nop', instr:'nop', srcA:'—', srcB:'—', dstE:'—', dstM:'—', aluA:'—', aluB:'—', setCC:'0', note:'' }
+];
+
+const ENC = [
+  { id:'halt', instr:'halt', icode:'0', ifun:'0', len:1, fmt:'00' },
+  { id:'nop', instr:'nop', icode:'1', ifun:'0', len:1, fmt:'10' },
+  { id:'rrmovq', instr:'rrmovq rA, rB', icode:'2', ifun:'0', len:2, fmt:'20 rA rB' },
+  { id:'cmov', instr:'cmovXX rA, rB', icode:'2', ifun:'1–6', len:2, fmt:'2fn rA rB' },
+  { id:'irmovq', instr:'irmovq V, rB', icode:'3', ifun:'0', len:10, fmt:'30 rB F | V(8 字节)' },
+  { id:'rmmovq', instr:'rmmovq rA, D(rB)', icode:'4', ifun:'0', len:10, fmt:'40 rA rB | D(8 字节)' },
+  { id:'mrmovq', instr:'mrmovq D(rB), rA', icode:'5', ifun:'0', len:10, fmt:'50 rA rB | D(8 字节)' },
+  { id:'opq', instr:'OPq rA, rB', icode:'6', ifun:'0–3', len:2, fmt:'6fn rA rB' },
+  { id:'jxx', instr:'jXX Dest', icode:'7', ifun:'0–6', len:9, fmt:'7fn | Dest(8 字节)' },
+  { id:'call', instr:'call Dest', icode:'8', ifun:'0', len:9, fmt:'80 | Dest(8 字节)' },
+  { id:'ret', instr:'ret', icode:'9', ifun:'0', len:1, fmt:'90' },
+  { id:'pushq', instr:'pushq rA', icode:'A', ifun:'0', len:2, fmt:'A0 rA F' },
+  { id:'popq', instr:'popq rA', icode:'B', ifun:'0', len:2, fmt:'B0 rA F' }
+];
+
+const REGS = [
+  ['%rax', '0'], ['%rcx', '1'], ['%rdx', '2'], ['%rbx', '3'],
+  ['%rsp', '4'], ['%rbp', '5'], ['%rsi', '6'], ['%rdi', '7'], ['none', 'F']
+];
+
+const HAZARDS = [
+  { id:'lu1',
+    q:'`mrmovq 0(%rdx), %rax` 后紧跟 `addq %rbx, %rax`，属于什么冒险？能否只靠数据前递解决？',
+    opts:['load-use 冒险；不能，必须停顿一拍','普通数据冒险；能，从 M 段前递 valE','控制冒险；靠分支预测解决','没有冒险，可以正常流水'],
+    ans:0,
+    why:'load 的数据要到 M 阶段末尾才从内存读出（m_valM），而下一条 addq 在 E 阶段就要用 %rax 的值，前递来不及。必须 F、D 停顿、E 插入气泡。' },
+  { id:'lu2',
+    q:'load-use（加载-使用）冒险的检测条件，下列哪一条正确？',
+    opts:['E_icode in {IMRMOVQ, IPOPQ} && E_dstM in {d_srcA, d_srcB}','D_icode in {IMRMOVQ, IPOPQ} && D_dstM in {e_srcA, e_srcB}','M_icode == IMRMOVQ && M_dstM == W_dstE','E_icode == IJXX && !e_Cnd'],
+    ans:0,
+    why:'E 阶段是 load（mrmovq / popq），且它的访存目的寄存器 E_dstM 正好是 D 阶段指令要读的源寄存器 d_srcA 或 d_srcB。' },
+  { id:'lu3',
+    q:'检测到 load-use 冒险时，流水线各寄存器的控制是：',
+    opts:['F 停顿、D 停顿、E 插入气泡、M/W 正常','F 停顿、D 气泡、E 正常、M/W 正常','F/D/E 全部停顿','F 气泡、D 停顿、E 停顿'],
+    ans:0,
+    why:'等 load 走到 M 阶段把数据读出来：F、D 保持（stall），E 插入 bubble，M、W 正常前进。' },
+  { id:'fwd1',
+    q:'`irmovq $2, %rax` 后紧跟 `addq %rax, %rdx`，addq 在哪个阶段检测到数据冒险，值从哪里前递？',
+    opts:['D 阶段检测；由 M 阶段的 irmovq 前递 M_valE','E 阶段检测；由 W 阶段前递 W_valE','D 阶段检测；由 W 阶段前递 W_valM','不会检测到冒险'],
+    ans:0,
+    why:'源寄存器在 D 阶段读取，因此冒险在 D 检测。addq 在 D 时，irmovq 正在 M，它的 ALU 结果走 M_valE 前递。' },
+  { id:'fwd2',
+    q:'PIPE 中 d_valA 的前递优先级（从近到远）是：',
+    opts:['e_valE → m_valM → M_valE → W_valM → W_valE → d_rvalA','m_valM → e_valE → W_valE → d_rvalA','W_valE → M_valE → e_valE → d_rvalA','先查寄存器文件，再依次前递'],
+    ans:0,
+    why:'E 段最近，优先；M 段内先查访存结果 m_valM，再查 ALU 结果 M_valE；W 段同理；都不匹配才用寄存器文件读出的 d_rvalA。' },
+  { id:'ret1',
+    q:'`ret` 在流水线中通过时，为什么要让取指停顿？',
+    opts:['返回地址要到访存阶段读栈才知道，取指无法提前得到 PC','ret 会写坏条件码','ret 需要 ALU 计算目标地址','ret 是非法指令，必须停顿'],
+    ans:0,
+    why:'ret 的目标 PC 来自栈上保存的返回地址，M 阶段才读出。常见做法：IRET 在 D/E/M 任一级时 F 停顿、D 插气泡，等 W 阶段拿到返回地址再改道。' },
+  { id:'ret2',
+    q:'`mrmovq 0(%rdx), %rsp` 后紧跟 `ret`，会触发什么？',
+    opts:['同时触发 load-use 互锁与 ret 的特殊停顿','只触发 ret 的特殊停顿','只触发 load-use 互锁','什么都不会发生'],
+    ans:0,
+    why:'ret 在 D 阶段要读 %rsp，而加载 %rsp 的 mrmovq 还在 E，形成 load-use；同时 ret 在流水线中又要求 F 停顿。控制逻辑要同时处理 stall 与返回地址选择。' },
+  { id:'br1',
+    q:'PIPE 中分支预测失败（mispredicted branch）在哪个阶段判定，如何处理？',
+    opts:['E 阶段算出 Cnd 后判定，给 D、E 插入气泡','D 阶段判定，冲刷 F','M 阶段判定，清空整个流水线','W 阶段判定，回滚寄存器'],
+    ans:0,
+    why:'条件在 E 阶段由 Cond(CC, ifun) 算出。预测失败时 D、E 插入气泡，把错误路径上的两条指令冲掉。' },
+  { id:'cc1',
+    q:'Y86-64 中，哪类指令会更新条件码？',
+    opts:['OPq（扩展的 iaddq 也算）','所有算术与传送指令','只有 cmovXX','call / ret'],
+    ans:0,
+    why:'标准 Y86-64 只有 OPq 设置 ZF/SF/OF/CF；irmovq、rrmovq、cmov、访存、call/ret、push/pop 都不改条件码。' },
+  { id:'dep1',
+    q:'下列关于流水线的说法，哪一条正确？',
+    opts:['普通单发射流水线 CPI ≥ 1，流水线不能缩短单条指令的延迟','流水线越深，单条延迟一定越小','分支预测失败不会造成性能损失','数据冒险都可以靠调整指令顺序完全消除'],
+    ans:0,
+    why:'流水线提高的是吞吐率；寄存器开销与冒险惩罚会让单条延迟变大。单发射普通流水线每周期最多完成一条指令，CPI≥1。' }
+];
+
+const FACTS = [
+  { id:'cc4', tag:'架构', q:'Y86-64 有哪 4 个条件码？', a:'ZF、SF、OF、CF', tokens:true,
+    why:'零标志、符号标志、溢出标志、进位/借位标志。x86-64 还有 PF、AF 等，Y86 精简掉了。' },
+  { id:'isa', tag:'架构', q:'参数放在 %rdi/%rsi、返回值放在 %rax，这属于 ISA 还是 ABI？', a:'ABI', alt:['调用约定'],
+    why:'ISA 规定程序员可见的架构状态与指令语义；寄存器用途的约定（调用约定）属于 ABI，是软件约定。' },
+  { id:'base', tag:'架构', q:'rmmovq 与 mrmovq 都用 rB 作基址，硬件上的好处是什么？', a:'只需一条地址加法通路', alt:['省去多路选择器','电路更简单'],
+    why:'两条指令的地址都由 D + R[rB] 得到，可以共用同一个地址加法器，不必为两种寄存器顺序各做一条通路。' },
+  { id:'stage6', tag:'架构', q:'SEQ 的六个阶段按顺序填空（英文或缩写均可）：', blanks:[
+      { l:'①', a:'Fetch', alt:['F','取指'] },
+      { l:'②', a:'Decode', alt:['D','译码'] },
+      { l:'③', a:'Execute', alt:['E','执行'] },
+      { l:'④', a:'Memory', alt:['M','访存'] },
+      { l:'⑤', a:'Write back', alt:['W','写回'] },
+      { l:'⑥', a:'PC update', alt:['P','更新PC'] }],
+    why:'F → D → E → M → W → PC update（Fetch / Decode / Execute / Memory / Write back / PC update），每个时钟周期完成一条指令。' },
+  { id:'detect', tag:'流水线', q:'PIPE 在哪个阶段检测数据冒险？', a:'D', alt:['Decode','译码'],
+    why:'目的寄存器在 W 写回、源寄存器在 D 读取，所以读寄存器时（D 阶段）检查是否与 E/M/W 的目的寄存器冲突。' },
+  { id:'lu-dst', tag:'流水线', q:'load-use 检测时，E 阶段的目的寄存器信号名是？与 D 阶段的哪些信号比较？', blanks:[
+      { l:'E 阶段目的寄存器', a:'E_dstM' },
+      { l:'D 阶段源寄存器 A', a:'d_srcA' },
+      { l:'D 阶段源寄存器 B', a:'d_srcB' }],
+    why:'完整条件：E_icode in {IMRMOVQ, IPOPQ} && E_dstM in {d_srcA, d_srcB}。' },
+  { id:'fwd-order', tag:'流水线', q:'写出 d_valA 的前递顺序（从近到远，最后是默认值）：', blanks:[
+      { l:'① E 段 ALU', a:'e_valE' },
+      { l:'② M 段访存', a:'m_valM' },
+      { l:'③ M 段 ALU', a:'M_valE' },
+      { l:'④ W 段访存', a:'W_valM' },
+      { l:'⑤ W 段 ALU', a:'W_valE' },
+      { l:'⑥ 默认', a:'d_rvalA' }],
+    why:'ICALL / IJXX 用 D_valP（顺序地址）优先；其余按 E → M → W，段内先 M 后 E，最后寄存器文件。' },
+  { id:'bubble3', tag:'流水线', q:'ret 通过流水线期间，一共插入几个气泡？', a:'3',
+    why:'ret 依次经过 D、E、M 三级，每级各插入一个气泡，共 3 个。' },
+  { id:'thr', tag:'流水线', q:'流水线满负荷时，每多少时间完成一条指令由谁决定？', a:'最慢的一级', alt:['max(Li+R)','最长的一级'],
+    why:'吞吐周期 = max(Li + R)；单条延迟 = Σ(Li + R)，细分流水线会让延迟变大。' },
+  { id:'split', tag:'流水线', q:'把组合逻辑细分成 k 段均衡流水线，单条指令延迟变成什么？（用 ΣL、k、R 表示）', a:'ΣL + kR', alt:['sumL + kR'],
+    why:'每段周期 = ΣL/k + R，k 段总延迟 = ΣL + kR，寄存器开销被乘了 k 次。' },
+  { id:'miss3', tag:'Cache', q:'Cache 的三种未命中是？', a:'冷启、容量、冲突', tokens:true,
+    alt:['compulsory capacity conflict','义务、容量、冲突'],
+    why:'冷启（首次访问必 miss）、容量（工作集超过总容量）、冲突（映射到同组的块超过 E 路）。' },
+  { id:'wb', tag:'Cache', q:'write-back 通常搭配哪种写不命中策略？', a:'write-allocate', alt:['写分配'],
+    why:'写不命中先调入块再写，之后命中都在 cache 里改，脏块替换时才写回，减少下级流量。' },
+  { id:'bits', tag:'Cache', q:'写出地址划分的位数公式：', blanks:[
+      { l:'块内偏移 offset', a:'log2(B)' },
+      { l:'组索引 index', a:'log2(S)' },
+      { l:'标记 tag', a:'m - offset - index', alt:['m-index-offset','m - log2(B) - log2(S)'] }],
+    why:'m 为地址位数，B 为块大小（字节），S 为组数；tag 吃掉剩余所有高位。' },
+  { id:'cap', tag:'Cache', q:'Cache 的数据容量（字节）公式是？', a:'S × E × B', alt:['S*E*B','组数 × 路数 × 块大小'],
+    why:'S 个组、每组 E 路、每路 B 字节。注意不把 tag、valid、dirty 位算进数据容量。' },
+  { id:'opt2', tag:'优化', q:'限制编译器优化的两大因素是什么？', a:'过程调用、存储器别名', tokens:true,
+    alt:['函数调用、内存别名'],
+    why:'过程调用可能有边带效应；不同指针可能指向同一地址（别名），编译器不敢随意缓存内存值或重排访存。' },
+  { id:'cpe', tag:'优化', q:'CPE 的全称与含义是？', a:'每元素周期数', alt:['cycles per element','每元素平均周期数'],
+    why:'CPE = cycles per element，内循环每处理一个元素的平均周期数；越接近发射上限，吞吐越好。' },
+  { id:'link2', tag:'链接', q:'链接器的两大任务是？', a:'符号解析、重定位', tokens:true,
+    alt:['symbol resolution relocation'],
+    why:'符号解析把每个引用绑定到唯一定义；重定位把最终地址填进代码与数据中的引用处。' },
+  { id:'weak', tag:'链接', q:'强符号与弱符号分别指什么？', blanks:[
+      { l:'强符号', a:'函数、已初始化的全局变量', alt:['函数和已初始化全局变量'] },
+      { l:'弱符号', a:'未初始化的全局变量', alt:['未初始化全局变量'] }],
+    why:'强符号不能重复定义；弱符号可以被强符号覆盖。两个强符号重名 → 链接错误。' },
+  { id:'callrel', tag:'链接', q:'callq 的 4 字节偏移在 .o 中尚未重定位时填什么？它最终表示什么？', blanks:[
+      { l:'未重定位时的值', a:'0' },
+      { l:'最终含义', a:'目标地址 − 下一条指令地址', alt:['target - next_pc','target-next_pc','目标地址减下一条指令地址','目标地址减去下一条指令地址'] }],
+    why:'存的是 target − next_pc 的相对偏移；未重定位时为 0，所以反汇编会显示成下一条指令的地址。' },
+  { id:'plt', tag:'链接', q:'动态链接在运行时靠什么机制把共享库函数的地址绑定到调用点？', a:'PLT / GOT', alt:['PLT/GOT','PLT','GOT','过程链接表与全局偏移表'],
+    why:'调用点先跳到 PLT 桩，桩通过 GOT 取得函数地址；首次调用时动态链接器解析并回填 GOT，即延迟绑定。' },
+  { id:'exc4', tag:'ECF', q:'异常的四种类型是？', a:'中断、陷阱、故障、终止', tokens:true,
+    alt:['interrupt trap fault abort'],
+    why:'中断异步、外部；陷阱同步、有意；故障可修复；终止不可修复。' },
+  { id:'fault', tag:'ECF', q:'哪一类异常处理返回后会重新执行当前指令？', a:'故障', alt:['fault','faults'],
+    why:'fault 返回后重执行触发指令；除 0 这类不可修复 fault 只能终止进程。trap 返回下一条。' },
+  { id:'fork', tag:'ECF', q:'fork 一次调用两次返回：子进程返回？父进程返回？', blanks:[
+      { l:'子进程', a:'0' }, { l:'父进程', a:'子进程的 pid', alt:['子pid','子进程pid'] }],
+    why:'子进程是父进程地址空间的副本（写时复制），此后各自独立。' },
+  { id:'forkn', tag:'ECF', q:'连续 3 次成功 fork（每个进程都执行后续 fork）后，共有几个进程？', a:'8', alt:['2^3'],
+    why:'每次 fork 当前进程数翻倍：1 → 2 → 4 → 8。' },
+  { id:'sigq', tag:'ECF', q:'同种信号在阻塞期间会排队吗？', a:'不会', alt:['不排队','不会排队','no'],
+    why:'同种信号阻塞期间只记一次，可能合并或丢失；不同信号互不影响。' },
+  { id:'safe', tag:'ECF', q:'信号处理函数内只能调用哪类函数？', a:'async-signal-safe', alt:['异步信号安全函数','异步信号安全的函数'],
+    why:'handler 可能打断任意代码；调用非 async-signal-safe 函数（如 printf、malloc）可能死锁或破坏状态。' },
+  { id:'jmp', tag:'ECF', q:'setjmp 首次返回什么？longjmp 传入 0 时，setjmp 又会返回什么？', blanks:[
+      { l:'首次返回', a:'0' }, { l:'longjmp 传 0', a:'1' }],
+    why:'setjmp 保存上下文并返回 0；longjmp 跳回后返回传入值，传入 0 会被改成 1，以便区分首次返回。' },
+  { id:'cmov', tag:'架构', q:'cmovXX 的 Execute 阶段 valE 等于什么？', a:'0 + valA', alt:['valA','valA + 0'],
+    why:'借 ALU 做一次加法透传，把 valA 送进 valE；是否写回由 Cnd 决定。' },
+  { id:'popq-e', tag:'架构', q:'popq rA 的 Execute 与 Memory 阶段分别得到什么？', blanks:[
+      { l:'valE', a:'valB + 8', alt:['8 + valB','valB+8'] },
+      { l:'valM', a:'M8[valA]' }],
+    why:'valA 是旧 %rsp，用来读栈顶；valB+8 是新栈顶；写回先 %rsp 再 rA。' },
+  { id:'l2', tag:'存储', q:'Intel Core i7 的 L2 Cache 容量最有可能是多少？', a:'256KB', alt:['256kB','256 KB'],
+    why:'L1 数十 KB，L2 数百 KB（约 256KB），L3 数 MB 到数十 MB。' },
+  { id:'rom', tag:'存储', q:'“ROM 只能读不能写”这句话对吗？', a:'错', alt:['不对','错误','否'],
+    why:'ROM 是非易失的，但现代 ROM（EPROM / EEPROM / Flash）可以写入，只是写入方式与 RAM 不同。' },
+  { id:'dram', tag:'存储', q:'SRAM 与 DRAM 相比，谁的功耗更高？谁的价格更低？', blanks:[
+      { l:'功耗更高', a:'SRAM' }, { l:'价格更低', a:'DRAM' }],
+    why:'SRAM 用触发器、快、贵、功耗高、不需刷新；DRAM 用电容、慢、便宜、密度高、需要刷新。' },
+  { id:'memstick', tag:'存储', q:'64 位内存条的位宽是怎样由多颗芯片提供的？', a:'多颗芯片并联，各自提供 8 位', alt:['并联','8 颗芯片并联'],
+    why:'一次访问所有芯片同时工作，每颗输出 8 位，合起来 64 位；一个 64 位数因此分散在全部芯片上。' }
+];
+
+/* ============ 基础工具 ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LSKEY = 'ics.stage2.memorize.v1';
+const LSOPT = 'ics.stage2.memorize.opts';
+
+let POOL = [];
+const resetPool = () => { POOL = []; };
+
+let storeData = {};
+try { storeData = JSON.parse(localStorage.getItem(LSKEY) || '{}') || {}; } catch (e) { storeData = {}; }
+function saveStore(){ try { localStorage.setItem(LSKEY, JSON.stringify(storeData)); } catch (e) {} }
+function getRec(id){ return storeData[id] || { mark: null }; }
+function setMark(id, mark, quiet){
+  const r = getRec(id);
+  if (r.mark === mark) return;
+  r.mark = mark; r.ts = Date.now(); storeData[id] = r; saveStore();
+  if (!quiet) updateChrome();
+}
+function countSolid(prefixes){
+  let n = 0;
+  for (const k in storeData) {
+    if (storeData[k].mark === 'solid' && prefixes.some(p => k.startsWith(p))) n++;
+  }
+  return n;
+}
+function shuffleArr(a){
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+
+const S = {
+  mod: 'home',
+  fedmwId: 'irmovq',
+  tableStage: 'E',
+  signal: 'aluA',
+  hazardId: HAZARDS[0].id,
+  factId: FACTS[0].id,
+  picked: null,
+  onlyTodo: false,
+  shuffle: false,
+  autoNext: true,
+  cacheMode: 'calc',
+  cacheQ: null,
+  sim: null,
+  gate: {},
+  order: {}
+};
+
+/* ---------- 答案规范化 ---------- */
+function norm(s){
+  return String(s).normalize('NFKC')
+    .replace(/[←⇐]/g, '<').replace(/[→⇒]/g, '>')
+    .replace(/[−–—]/g, '-').replace(/[×]/g, '*')
+    .replace(/[％%]/g, '').replace(/[，、；]/g, ',')
+    .replace(/[：]/g, ':').replace(/[（]/g, '(').replace(/[）]/g, ')')
+    .replace(/[“”"']/g, '').replace(/\s+/g, '').toLowerCase();
+}
+function tokStr(s){
+  return String(s).normalize('NFKC')
+    .replace(/[←⇐]/g, ' ').replace(/[→⇒]/g, ' ')
+    .replace(/[−–—]/g, '-').replace(/[×]/g, ' ')
+    .replace(/[％%]/g, '')
+    .replace(/[，、；,;\/|]/g, ' ')
+    .replace(/[：:]/g, ' ')
+    .replace(/[（）()]/g, ' ')
+    .replace(/[“”"'.]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim().toLowerCase()
+    .split(' ').filter(Boolean).sort().join('|');
+}
+function matchInput(v, op){
+  const cands = [op.a].concat(op.alt || []);
+  if (!String(v).trim()) return false;
+  if (op.tokens) {
+    const t = tokStr(v);
+    if (!t) return false;
+    return cands.some(c => tokStr(c) === t);
+  }
+  const n = norm(v);
+  if (!n) return false;
+  return cands.some(c => norm(c) === n);
+}
+
+/* ---------- 空格渲染 ---------- */
+function opHtml(op){
+  const ans = String(op.a);
+  const w = Math.min(380, Math.max(96, ans.length * 8.4 + 34));
+  const i = POOL.push(op) - 1;
+  const head = op.l ? `<span class="lhs">${esc(op.l)}</span><span class="arrow">←</span>` : '';
+  return `<div class="op-row">${head}` +
+    `<input class="blank" data-i="${i}" style="width:${Math.round(w)}px" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="填写">` +
+    `<span class="ans" hidden>${esc(ans)}</span></div>`;
+}
+function gradeScope(root, showWrong){
+  let ok = 0, total = 0, revealed = 0;
+  root.querySelectorAll('input.blank').forEach(inp => {
+    const op = POOL[+inp.dataset.i];
+    if (!op) return;
+    total++;
+    if (inp.dataset.revealed === '1') { ok++; revealed++; return; }
+    const good = matchInput(inp.value, op);
+    inp.classList.toggle('ok', good);
+    inp.classList.toggle('bad', !good);
+    const ans = inp.parentElement.querySelector('.ans');
+    if (ans) ans.hidden = good || !showWrong;
+    if (good) ok++;
+  });
+  return { ok, total, revealed };
+}
+function revealScope(root){
+  root.querySelectorAll('input.blank').forEach(inp => {
+    const op = POOL[+inp.dataset.i];
+    if (!op) return;
+    inp.value = op.a;
+    inp.classList.remove('bad');
+    inp.classList.add('revealed');
+    inp.dataset.revealed = '1';
+  });
+}
+
+/* ---------- 列表与顺序 ---------- */
+function ensureOrder(key, ids, force){
+  if (force || !S.order[key]) S.order[key] = S.shuffle ? shuffleArr(ids) : ids.slice();
+  return S.order[key];
+}
+function fedmwList(){
+  const all = ensureOrder('fedmw', FEDMW.map(x => x.id));
+  const list = S.onlyTodo ? all.filter(id => getRec('fedmw:' + id).mark !== 'solid') : all;
+  return list.length ? list : all;
+}
+function factList(){
+  const all = ensureOrder('fact', FACTS.map(x => x.id));
+  const list = S.onlyTodo ? all.filter(id => getRec('fact:' + id).mark !== 'solid') : all;
+  return list.length ? list : all;
+}
+function hazardList(){
+  const all = ensureOrder('hz', HAZARDS.map(x => x.id));
+  const list = S.onlyTodo ? all.filter(id => getRec('hz:' + id).mark !== 'solid') : all;
+  return list.length ? list : all;
+}
+
+/* ---------- 顶栏 / 侧栏 ---------- */
+const CORE_TOTAL = FEDMW.length + ENC.length + HAZARDS.length + FACTS.length;
+const EXAM = new Date('2026-11-16T08:00:00+08:00');
+
+function updateChrome(){
+  let n = 0;
+  for (const k in storeData) {
+    if (storeData[k].mark === 'solid' && (k.startsWith('fedmw:') || k.startsWith('enc:') || k.startsWith('hz:') || k.startsWith('fact:'))) n++;
+  }
+  $('#solidChip').textContent = `已掌握 ${n} / ${CORE_TOTAL}`;
+  $('#progBar').style.width = (CORE_TOTAL ? (n / CORE_TOTAL * 100) : 0) + '%';
+  $('#progTxt').textContent = `${n} / ${CORE_TOTAL}`;
+
+  const d = EXAM - new Date();
+  if (d <= 0) $('#cdChip').textContent = '考试已结束';
+  else {
+    const days = Math.floor(d / 864e5), hrs = Math.floor((d % 864e5) / 36e5);
+    $('#cdChip').textContent = `距考试 ${days} 天 ${hrs} 小时`;
+  }
+  renderNav();
+}
+function renderNav(){
+  const items = [
+    ['home', '总览', ''],
+    ['fedmw', '指令微操作 · 逐条', countSolid(['fedmw:']) + '/' + FEDMW.length],
+    ['table', '指令微操作 · 整列', countSolid(['fedmw:']) + '/' + FEDMW.length],
+    ['signal', '控制信号', countSolid(['sig:' + S.signal + ':']) + '/' + SIGNALS.length],
+    ['encoding', '指令编码', countSolid(['enc:']) + '/' + ENC.length],
+    ['hazard', '流水线冒险', countSolid(['hz:']) + '/' + HAZARDS.length],
+    ['cache', 'Cache 计算', '生成'],
+    ['facts', '快问快答', countSolid(['fact:']) + '/' + FACTS.length],
+    ['ref', '速查总表', '—']
+  ];
+  $('#nav').innerHTML = items.map(([k, t, c]) =>
+    `<button class="${S.mod === k ? 'active' : ''}" onclick="go('${k}')"><span>${t}</span><span class="n-count">${c}</span></button>`
+  ).join('');
+}
+
+/* ---------- 导航 ---------- */
+function go(mod){
+  S.mod = mod;
+  S.picked = null;
+  render();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function pickFedmw(id){ S.fedmwId = id; S.picked = null; render(); }
+function gateState(id){
+  if (!S.gate[id]) S.gate[id] = { pick: [], checked: false, ok: false };
+  return S.gate[id];
+}
+function stageHasOps(it, k){ return (it.st[k] || []).length > 0; }
+function gateNeed(it){ return STAGES.filter(([k]) => stageHasOps(it, k)).map(([k]) => k); }
+function toggleGate(k){
+  const g = gateState(S.fedmwId);
+  if (g.ok) return;
+  g.checked = false;
+  const i = g.pick.indexOf(k);
+  if (i >= 0) g.pick.splice(i, 1); else g.pick.push(k);
+  render();
+}
+function checkGate(){
+  const it = FEDMW.find(x => x.id === S.fedmwId);
+  const g = gateState(it.id);
+  if (g.ok) return;
+  g.checked = true;
+  const need = gateNeed(it);
+  g.ok = g.pick.length === need.length && g.pick.every(k => need.includes(k));
+  render();
+  if (g.ok) {
+    const inp = document.querySelector('#fedmwCard input.blank');
+    if (inp) inp.focus();
+  }
+}
+function pickStage(st){ S.tableStage = st; render(); }
+function pickSignal(sg){ S.signal = sg; render(); }
+function pickFact(id){ S.factId = id; render(); }
+function pickHazard(id){ S.hazardId = id; S.picked = null; render(); }
+function nextFedmw(dir){
+  const list = fedmwList();
+  let i = list.indexOf(S.fedmwId);
+  if (i < 0) i = 0;
+  S.fedmwId = list[(i + (dir || 1) + list.length) % list.length];
+  render();
+}
+function nextFact(dir){
+  const list = factList();
+  let i = list.indexOf(S.factId);
+  if (i < 0) i = 0;
+  S.factId = list[(i + (dir || 1) + list.length) % list.length];
+  render();
+}
+function nextHazard(dir){
+  const list = hazardList();
+  let i = list.indexOf(S.hazardId);
+  if (i < 0) i = 0;
+  S.hazardId = list[(i + (dir || 1) + list.length) % list.length];
+  S.picked = null;
+  render();
+}
+
+/* ---------- 主渲染 ---------- */
+function render(){
+  resetPool();
+  const m = $('#main');
+  if (S.mod === 'home') m.innerHTML = viewHome();
+  else if (S.mod === 'fedmw') m.innerHTML = viewFedmw();
+  else if (S.mod === 'table') m.innerHTML = viewTable();
+  else if (S.mod === 'signal') m.innerHTML = viewSignal();
+  else if (S.mod === 'encoding') m.innerHTML = viewEncoding();
+  else if (S.mod === 'hazard') m.innerHTML = viewHazard();
+  else if (S.mod === 'cache') m.innerHTML = viewCache();
+  else if (S.mod === 'facts') m.innerHTML = viewFact();
+  else if (S.mod === 'ref') m.innerHTML = viewRef();
+  updateChrome();
+}
+
+/* ---------- 总览 ---------- */
+function modCard(mod, title, desc, prefix, total, label){
+  const n = prefix ? countSolid([prefix]) : 0;
+  const pct = total ? Math.round(n / total * 100) : 0;
+  return `<div class="mod" onclick="go('${mod}')">
+    <b>${title}</b><p>${desc}</p>
+    <div class="mbar"><i style="width:${pct}%"></i></div>
+    <div class="mnum">${label || (total ? `已掌握 ${n} / ${total}` : '整表练习')}</div></div>`;
+}
+function viewHome(){
+  const n = countSolid(['fedmw:', 'enc:', 'hz:', 'fact:']);
+  return `<div class="hero">
+    <section class="card hero-main">
+      <h1>默写台</h1>
+      <p>把第二次阶段测验里最该「手写出来」的内容做成填空：Y86-64 的 FEDMW 微操作、aluA / aluB 等控制信号、指令编码、流水线冒险、Cache 计算与高频结论。判分逐空进行，写法等价即可。</p>
+      <div class="actions" style="margin-top:4px">
+        <button class="primary" onclick="go('fedmw')">开始逐条默写</button>
+        <button onclick="go('table')">整列爆破</button>
+        <button class="ghost" onclick="go('ref')">打开速查</button>
+      </div>
+    </section>
+    <aside class="card hero-side">
+      <div class="kv"><span>考试</span><b>2026-11-16 周一</b></div>
+      <div class="kv"><span>范围</span><b>第 10–18 讲</b></div>
+      <div class="kv"><span>本页核心条目</span><b>${CORE_TOTAL} 项</b></div>
+      <div class="kv"><span>已完成</span><b>${n} 项</b></div>
+      <div class="kv"><span>进度</span><b>${Math.round(n / CORE_TOTAL * 100)}%</b></div>
+    </aside>
+  </div>
+  <section class="card" style="margin-top:16px">
+    <div class="card-head"><div><h2 class="card-title">练什么</h2>
+      <p class="card-sub">按「先默写、再对答案、错的重来」的顺序刷。</p></div></div>
+    <div class="mod-grid" style="margin-top:6px">
+      ${modCard('fedmw', 'FEDMW 逐条', '先判断这条指令需要哪些阶段，选对后再逐空默写。', 'fedmw:', FEDMW.length)}
+      ${modCard('table', 'FEDMW 整列', '选定一个阶段（如 Execute），一次默写全部指令。', 'fedmw:', FEDMW.length)}
+      ${modCard('signal', '控制信号', 'srcA / srcB / dstE / dstM / aluA / aluB / set_cc 整列挖空。', '', 0)}
+      ${modCard('encoding', '指令编码', 'icode、指令长度与字节格式。', 'enc:', ENC.length)}
+      ${modCard('hazard', '流水线冒险', 'load-use、前递顺序、ret、分支预测的判断。', 'hz:', HAZARDS.length)}
+      ${modCard('cache', 'Cache 计算', '随机生成地址划分题与直接映射模拟题。', '', 0, '每次随机生成')}
+      ${modCard('facts', '快问快答', 'ISA/ABI、三种 miss、链接、异常、fork、信号。', 'fact:', FACTS.length)}
+      ${modCard('ref', '速查总表', '全部答案的只读版，考前十分钟扫一遍。', '', 0)}
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><h2 class="card-title">背法</h2></div></div>
+    <ol style="margin:6px 0 0; padding-left:22px; color:var(--ink-2); font-size:13.5px; line-height:1.9">
+      <li>先用「逐条」把 13 条指令过一遍：先判断需要哪些阶段，再默写微操作，记不住的标出来。</li>
+      <li>再用「整列」按阶段扫：先 Execute，再 Memory / Write back，最后 Fetch。</li>
+      <li>控制信号与编码各刷一遍；Cache 与快问快答每天各抽 10 分钟。</li>
+      <li>考前一晚只开「只练未掌握」和「速查总表」，不再新增内容。</li>
+    </ol>
+    <p class="hint">答案依据 CSAPP Y86-64 / 课程 SEQ 阶段表；同一含义的不同写法（如 <code>0+valC</code> 与 <code>valC</code>）都判对。</p>
+  </section>`;
+}
+
+/* ---------- FEDMW 逐条 ---------- */
+function gateView(it){
+  const g = gateState(it.id);
+  const need = gateNeed(it);
+  if (g.ok) {
+    return `<div class="gate done" id="gateBox">
+      <div class="gate-head"><b>阶段判断</b><span class="chip ok">✓ 判断正确</span>
+        <span class="gate-note">这条指令实际执行 ${need.length} 个阶段，下面开始逐空默写。</span></div>
+      <div class="gate-stages">${STAGES.filter(([k]) => need.includes(k)).map(([k, en, cn]) =>
+        `<span class="gstage on"><b>${k}</b><span>${cn}</span></span>`).join('')}</div>
+    </div>`;
+  }
+  const sel = new Set(g.pick);
+  return `<div class="gate" id="gateBox">
+    <div class="gate-head"><b>第一步 · 判断阶段</b><span class="chip muted">选出需要执行的阶段</span></div>
+    <p class="gate-sub">选中 = 这条指令需要执行的阶段，不选 = 不需要。全部判断正确后才解锁下方默写；选错时红色为多选、橙色为漏选。</p>
+    <div class="gate-stages">${STAGES.map(([k, en, cn]) => {
+      const on = sel.has(k);
+      let cls = 'gstage' + (on ? ' on' : '');
+      if (g.checked) {
+        const has = stageHasOps(it, k);
+        if (on && has) cls += ' good';
+        else if (on && !has) cls += ' bad';
+        else if (!on && has) cls += ' miss';
+      }
+      return `<button class="${cls}" onclick="toggleGate('${k}')"><b>${k}</b><span>${cn}</span></button>`;
+    }).join('')}</div>
+    <div class="actions" style="margin-top:12px">
+      <button class="primary" onclick="checkGate()">确认判断</button>
+      <span class="hint" style="margin:0">全选对才会出现默写空格。</span>
+    </div>
+    <div class="feedback ${g.checked ? (g.ok ? 'ok' : 'bad') : ''}" id="gateFb">${
+      g.checked ? (g.pick.length ? '还有判断错误：红色是多选了，橙色是漏选了，改完再确认。' : '至少选择一个阶段。') : ''
+    }</div>
+  </div>`;
+}
+function viewFedmw(){
+  const list = fedmwList();
+  if (!list.includes(S.fedmwId)) S.fedmwId = list[0];
+  const it = FEDMW.find(x => x.id === S.fedmwId);
+  const idx = list.indexOf(it.id);
+  const g = gateState(it.id);
+  let h = `<section class="card" id="fedmwCard">
+    <div class="instr-head">
+      <span class="instr-name">${esc(it.asm)}</span>
+      <span class="chip">${esc(it.kind)}</span>
+      <span class="chip muted mono">${esc(it.code)}</span>
+      <span class="chip ${it.cc === '设置' ? 'warn' : 'muted'}">${it.cc === '设置' ? '设置条件码' : '不改条件码'}</span>
+      <span class="spacer"></span>
+      <span class="chip muted">${idx + 1} / ${list.length}</span>
+    </div>
+    ${g.ok ? `<p class="instr-tip">${esc(it.tip)}</p>` : ''}
+    ${gateView(it)}`;
+  if (g.ok) {
+    h += `<table class="fedmw"><thead><tr><th>阶段</th><th>微操作（右侧留空）</th></tr></thead><tbody>`;
+    STAGES.forEach(([k, en, cn]) => {
+      const ops = it.st[k] || [];
+      h += `<tr><td class="stage"><span class="stage-ab">${k}</span><span class="stage-cn">${cn}</span></td><td>`;
+      h += ops.length ? ops.map(opHtml).join('') : '<span class="none">— 无操作</span>';
+      h += `</td></tr>`;
+    });
+    h += `</tbody></table>`;
+  } else {
+    h += `<div class="locked-box"><b>默写区已锁定</b><span>先在上方判断这条指令需要哪些阶段；判断正确后，六个阶段的空格才会出现。</span></div>`;
+  }
+  h += `<div class="actions">`;
+  if (g.ok) h += `<button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>`;
+  h += `<button onclick="revealMain()">显示答案</button>
+      <button class="ghost" onclick="nextFedmw(-1)">上一题</button>
+      <button class="ghost" onclick="nextFedmw(1)">下一题</button>`;
+  if (g.ok) h += `<span class="spacer"></span>
+      <button class="ghost small" onclick="markCurrent('solid')">标记已掌握</button>
+      <button class="ghost small" onclick="markCurrent('shaky')">标记待复习</button>`;
+  h += `</div>
+    <div class="feedback" id="feedback"></div>
+    <p class="hint">${g.ok ? 'Tab 在空格间跳转，Enter 检查，Ctrl+Enter 看答案。红色空格会在检查后显示正确答案。' : '先完成阶段判断，再开始默写；提示语会在判断正确后显示。'}</p>
+    <div class="strips">${list.map(id => {
+      const x = FEDMW.find(y => y.id === id);
+      const rec = getRec('fedmw:' + id);
+      const cls = 'pill' + (id === S.fedmwId ? ' cur' : '') + (rec.mark === 'solid' ? ' solid' : rec.mark === 'shaky' ? ' shaky' : '');
+      return `<button class="${cls}" onclick="pickFedmw('${id}')">${esc(x.asm.split(/[ ,]/)[0])}</button>`;
+    }).join('')}</div>
+  </section>`;
+  return h;
+}
+
+/* ---------- 整列模式 ---------- */
+function viewTable(){
+  const st = S.tableStage;
+  const stMeta = STAGES.find(s => s[0] === st);
+  const filtered = FEDMW.filter(it => !S.onlyTodo || getRec('fedmw:' + it.id).mark !== 'solid');
+  const rows = filtered.length ? filtered : FEDMW;
+  let h = `<section class="card" id="drillCard">
+    <div class="card-head">
+      <div><h2 class="card-title">整列默写 · ${st} ${stMeta[2]}</h2>
+      <p class="card-sub">只填 ${st}（${stMeta[1]}）阶段；该阶段没有操作的指令显示「无操作」，不计分。</p></div>
+    </div>
+    <div class="seg" style="margin-bottom:4px">
+      ${STAGES.map(([k, en, cn]) => `<button class="${k === st ? 'on' : ''}" onclick="pickStage('${k}')">${k} · ${cn}</button>`).join('')}
+    </div>
+    <div class="tablewrap"><table class="grid" id="drillTable">
+      <thead><tr><th>指令</th><th>${st} 阶段微操作</th><th>结果</th></tr></thead><tbody>`;
+  rows.forEach(it => {
+    const ops = it.st[st] || [];
+    h += `<tr data-id="fedmw:${it.id}"><td class="mono" style="white-space:nowrap">${esc(it.asm)}</td><td class="cell">`;
+    h += ops.length ? ops.map(opHtml).join('') : '<span class="none">无操作</span>';
+    h += `</td><td class="mono" style="width:64px">${ops.length ? '' : '—'}</td></tr>`;
+  });
+  h += `</tbody></table></div>
+    <div class="actions">
+      <button class="primary" onclick="checkMain()">检查整列 <kbd>Enter</kbd></button>
+      <button onclick="revealMain()">显示答案</button>
+      <span class="spacer"></span>
+      <span class="op-note">共 ${rows.length} 行</span>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </section>`;
+  return h;
+}
+
+/* ---------- 控制信号 ---------- */
+function signalAlt(v){
+  switch (v) {
+    case '—': return ['-', 'none', '无', '不写'];
+    case '-8': return ['-8', '0-8', '(-8)', '+(-8)'];
+    case '+8': return ['8', '+8'];
+    case '0': return ['0', '否', 'no', 'false'];
+    case '1': return ['1', '是', 'yes', 'true'];
+    case '%rsp': return ['rsp', 'R[rsp]', '%rsp'];
+    case 'rA': return ['ra', 'R[rA]'];
+    case 'rB': return ['rb', 'R[rB]'];
+    default: return [];
+  }
+}
+function viewSignal(){
+  const sg = S.signal;
+  const def = SIGNAL_DEFS.find(x => x[0] === sg);
+  const rows = SIGNALS;
+  let h = `<section class="card" id="drillCard">
+    <div class="card-head">
+      <div><h2 class="card-title">控制信号 · ${sg}</h2>
+      <p class="card-sub">${def ? def[1] : ''}。没有该信号时填 <code>-</code> 或 <code>none</code>。</p></div>
+    </div>
+    <div class="seg" style="margin-bottom:4px">
+      ${SIGNAL_DEFS.map(([k, t]) => `<button class="${k === sg ? 'on' : ''}" onclick="pickSignal('${k}')">${k}</button>`).join('')}
+    </div>
+    <div class="tablewrap"><table class="grid" id="drillTable">
+      <thead><tr><th>指令</th><th>${sg}</th><th>备注</th><th style="width:56px">结果</th></tr></thead><tbody>`;
+  rows.forEach(r => {
+    const v = r[sg];
+    const op = { l: '', a: v, alt: signalAlt(v) };
+    h += `<tr data-id="sig:${sg}:${r.id}"><td class="mono" style="white-space:nowrap">${esc(r.instr)}</td>
+      <td class="cell">${opHtml(op)}</td>
+      <td class="sig-note" style="font-size:12px;color:var(--muted)" hidden>${esc(r.note || '')}</td>
+      <td class="mono" style="width:56px"></td></tr>`;
+  });
+  h += `</tbody></table></div>
+    <div class="actions">
+      <button class="primary" onclick="checkMain()">检查整表 <kbd>Enter</kbd></button>
+      <button onclick="revealMain()">显示答案</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <p class="hint">srcA/srcB 是读端口，dstE/dstM 是写端口；aluA 只在这条指令真正使用 ALU 时才有意义。</p>
+  </section>`;
+  return h;
+}
+
+/* ---------- 指令编码 ---------- */
+function viewEncoding(){
+  let h = `<section class="card" id="drillCard">
+    <div class="card-head"><div><h2 class="card-title">指令编码</h2>
+      <p class="card-sub">填 icode（十六进制一位）与指令长度（字节）；编码格式与 ifun 已给出。</p></div></div>
+    <div class="tablewrap"><table class="grid" id="drillTable">
+      <thead><tr><th>指令</th><th>icode</th><th>ifun</th><th>长度</th><th>编码格式</th><th style="width:56px">结果</th></tr></thead><tbody>`;
+  ENC.forEach(e => {
+    h += `<tr data-id="enc:${e.id}">
+      <td class="mono" style="white-space:nowrap">${esc(e.instr)}</td>
+      <td class="cell">${opHtml({ l: '', a: e.icode, alt: ['0x' + e.icode] })}</td>
+      <td class="mono" style="color:var(--muted)">${esc(e.ifun)}</td>
+      <td class="cell">${opHtml({ l: '', a: String(e.len), alt: [e.len + '字节', e.len + 'B'] })}</td>
+      <td class="mono" style="font-size:12.5px;color:var(--muted)">${esc(e.fmt)}</td>
+      <td style="width:56px"></td></tr>`;
+  });
+  h += `</tbody></table></div>
+    <div class="actions">
+      <button class="primary" onclick="checkMain()">检查整表 <kbd>Enter</kbd></button>
+      <button onclick="revealMain()">显示答案</button>
+      <span class="spacer"></span>
+      <span class="op-note">寄存器编号：%rax=0 … %rdi=7，none=F</span>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </section>
+  <section class="card tight">
+    <div class="card-sub" style="margin-bottom:8px">寄存器编号速记</div>
+    <div class="strips">${REGS.map(([r, v]) => `<span class="pill" style="cursor:default">${r} = ${v}</span>`).join('')}</div>
+  </section>`;
+  return h;
+}
+
+/* ---------- 流水线冒险 ---------- */
+function viewHazard(){
+  const list = hazardList();
+  if (!list.includes(S.hazardId)) S.hazardId = list[0];
+  const hz = HAZARDS.find(x => x.id === S.hazardId);
+  const idx = list.indexOf(hz.id);
+  let h = `<section class="card" id="hzCard">
+    <div class="card-head"><div><h2 class="card-title">流水线冒险 · ${idx + 1} / ${list.length}</h2>
+      <p class="card-sub">先自己判断，再点「检查」看解析。</p></div></div>
+    <div class="qtext">${mdCode(hz.q)}</div>
+    <div id="opts">`;
+  hz.opts.forEach((t, i) => {
+    const cls = S.picked === i ? 'opt picked' : 'opt';
+    h += `<label class="${cls}" onclick="pickOpt(${i})"><input type="radio" name="hz" ${S.picked === i ? 'checked' : ''}><span>${mdCode(t)}</span></label>`;
+  });
+  h += `</div>
+    <div class="actions">
+      <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
+      <button class="ghost" onclick="nextHazard(1)">下一题</button>
+      <span class="spacer"></span>
+      <button class="ghost small" onclick="markCurrent('solid')">标记已掌握</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div id="why" hidden></div>
+    <div class="strips">${list.map((id, i) => {
+      const rec = getRec('hz:' + id);
+      const cls = 'pill' + (id === S.hazardId ? ' cur' : '') + (rec.mark === 'solid' ? ' solid' : rec.mark === 'shaky' ? ' shaky' : '');
+      return `<button class="${cls}" onclick="pickHazard('${id}')">${String(i + 1).padStart(2, '0')}</button>`;
+    }).join('')}</div>
+  </section>`;
+  return h;
+}
+function pickOpt(i){
+  S.picked = i;
+  const opts = document.querySelectorAll('#opts .opt');
+  opts.forEach((el, k) => el.classList.toggle('picked', k === i));
+  const why = $('#why'); if (why) why.hidden = true;
+}
+function mdCode(s){
+  return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+/* ---------- 快问快答 ---------- */
+function viewFact(){
+  const list = factList();
+  if (!list.includes(S.factId)) S.factId = list[0];
+  const f = FACTS.find(x => x.id === S.factId);
+  const idx = list.indexOf(f.id);
+  let h = `<section class="card" id="factCard">
+    <div class="card-head">
+      <div><h2 class="card-title">快问快答 · ${idx + 1} / ${list.length}</h2>
+      <p class="card-sub">写出关键词即可，判分忽略顺序、空格与标点。</p></div>
+      <span class="spacer"></span><span class="chip muted">${esc(f.tag)}</span>
+    </div>
+    <div class="qtext">${mdCode(f.q)}</div>`;
+  if (f.blanks) {
+    h += `<div>${f.blanks.map(b => opHtml({ l: b.l, a: b.a, alt: b.alt || [] })).join('')}</div>`;
+  } else {
+    h += `<div>${opHtml({ l: '答案', a: f.a, alt: f.alt || [], tokens: f.tokens })}</div>`;
+  }
+  h += `<div class="actions">
+      <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
+      <button onclick="revealMain()">显示答案</button>
+      <button class="ghost" onclick="nextFact(-1)">上一题</button>
+      <button class="ghost" onclick="nextFact(1)">下一题</button>
+      <span class="spacer"></span>
+      <button class="ghost small" onclick="markCurrent('solid')">标记已掌握</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="why" id="why" hidden></div>
+    <div class="strips">${list.map((id, i) => {
+      const rec = getRec('fact:' + id);
+      const cls = 'pill' + (id === S.factId ? ' cur' : '') + (rec.mark === 'solid' ? ' solid' : rec.mark === 'shaky' ? ' shaky' : '');
+      return `<button class="${cls}" onclick="pickFact('${id}')">${String(i + 1).padStart(2, '0')}</button>`;
+    }).join('')}</div>
+  </section>`;
+  return h;
+}
+function showWhy(text){
+  const w = $('#why');
+  if (!w) return;
+  w.hidden = false;
+  w.innerHTML = mdCode(text);
+}
+
+/* ---------- Cache ---------- */
+function randInt(n){ return Math.floor(Math.random() * n); }
+function pickOne(a){ return a[randInt(a.length)]; }
+function genCalc(){
+  const B = pickOne([4, 8, 16, 32]);
+  const Sset = pickOne([2, 4, 8, 16]);
+  const E = pickOne([1, 2, 4]);
+  const off = Math.log2(B), index = Math.log2(Sset);
+  const m = off + index + 2 + randInt(4);
+  return { B, Sset, E, off, index, m, tag: m - off - index, cap: Sset * E * B, blocks: Sset * E };
+}
+function genSim(){
+  const B = pickOne([4, 8, 16]);
+  const Sset = pickOne([2, 4]);
+  const totalBlocks = 512 / B;
+  const uniq = [];
+  while (uniq.length < 4) {
+    const b = randInt(totalBlocks);
+    if (!uniq.includes(b)) uniq.push(b);
+  }
+  const seq = [];
+  for (let i = 0; i < 8; i++) {
+    const b = i < 4 ? uniq[i] : uniq[randInt(4)];
+    seq.push(b * B + randInt(B));
+  }
+  const sets = Array.from({ length: Sset }, () => ({ valid: false, tag: 0, block: -1 }));
+  const res = seq.map(addr => {
+    const idx = Math.floor(addr / B) % Sset;
+    const tag = Math.floor(addr / (B * Sset));
+    const s = sets[idx];
+    const hit = s.valid && s.tag === tag;
+    if (!hit) { s.valid = true; s.tag = tag; s.block = Math.floor(addr / B); }
+    return hit;
+  });
+  const final = sets.map(s => ({ ...s }));
+  return { B, Sset, seq, res, final, pick: Array(seq.length).fill(null), checked: false };
+}
+function newCache(){
+  if (S.cacheMode === 'calc') S.cacheQ = genCalc();
+  else S.sim = genSim();
+  render();
+}
+function viewCache(){
+  if (S.cacheMode === 'calc' && !S.cacheQ) S.cacheQ = genCalc();
+  if (S.cacheMode === 'sim' && !S.sim) S.sim = genSim();
+  let h = `<section class="card" id="cacheCard">
+    <div class="card-head"><div><h2 class="card-title">Cache 计算</h2>
+      <p class="card-sub">随机参数，每次重新生成；数字题只比数值。</p></div></div>
+    <div class="seg" style="margin-bottom:8px">
+      <button class="${S.cacheMode === 'calc' ? 'on' : ''}" onclick="setCacheMode('calc')">地址划分</button>
+      <button class="${S.cacheMode === 'sim' ? 'on' : ''}" onclick="setCacheMode('sim')">直接映射模拟</button>
+    </div>`;
+  if (S.cacheMode === 'calc') {
+    const q = S.cacheQ;
+    h += `<p class="qtext">地址空间 <b>${q.m}</b> 位；块大小 <b>${q.B}</b> 字节；共 <b>${q.Sset}</b> 组，<b>${q.E}</b> 路组相联。求地址划分与数据容量。</p>
+      <div class="formgrid">
+        <div class="field"><label>offset 位数</label><input class="blank" data-num="${q.off}" inputmode="numeric" autocomplete="off" placeholder="—"></div>
+        <div class="field"><label>index 位数</label><input class="blank" data-num="${q.index}" inputmode="numeric" autocomplete="off" placeholder="—"></div>
+        <div class="field"><label>tag 位数</label><input class="blank" data-num="${q.tag}" inputmode="numeric" autocomplete="off" placeholder="—"></div>
+        <div class="field"><label>数据容量（字节）</label><input class="blank" data-num="${q.cap}" inputmode="numeric" autocomplete="off" placeholder="—"></div>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
+        <button onclick="newCache()">换一题</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <p class="hint">提示：总块数 = S × E，容量 = 总块数 × B；tag 吃掉剩下的所有高位。</p>`;
+  } else {
+    const s = S.sim;
+    const blocks = 512 / s.B;
+    h += `<p class="qtext">直接映射 Cache：<b>${s.B}</b> 字节/块，<b>${s.Sset}</b> 组（数据容量 ${s.B * s.Sset} 字节），地址空间 512 字节（共 ${blocks} 块）。逐行判断每次字节访问是 Hit 还是 Miss。</p>
+      <div class="tablewrap"><table class="grid" id="simTable">
+        <thead><tr><th>#</th><th>地址</th><th>判断</th><th>答案</th></tr></thead><tbody>`;
+    s.seq.forEach((addr, i) => {
+      const chosen = s.pick[i];
+      h += `<tr data-step="${i}"><td>${i + 1}</td><td class="mono">0x${addr.toString(16).toUpperCase().padStart(3, '0')} (${addr})</td>
+        <td><div class="hm">
+          <button data-v="H" class="${chosen === 'H' ? 'on-h' : ''}" onclick="pickHM(${i},'H')">Hit</button>
+          <button data-v="M" class="${chosen === 'M' ? 'on-m' : ''}" onclick="pickHM(${i},'M')">Miss</button>
+        </div></td><td class="mono corr"></td></tr>`;
+    });
+    h += `</tbody></table></div>
+      <div class="actions">
+        <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
+        <button onclick="newCache()">换一题</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div id="simDetail"></div>`;
+  }
+  h += `</section>`;
+  return h;
+}
+function setCacheMode(m){ S.cacheMode = m; render(); }
+function pickHM(i, v){
+  const s = S.sim;
+  s.pick[i] = v;
+  const tr = document.querySelector(`tr[data-step="${i}"]`);
+  if (!tr) return;
+  tr.querySelectorAll('button[data-v]').forEach(b => {
+    b.classList.remove('on-h', 'on-m');
+    if (b.dataset.v === v) b.classList.add(v === 'H' ? 'on-h' : 'on-m');
+  });
+}
+
+/* ---------- 速查 ---------- */
+function viewRef(){
+  let h = `<section class="card">
+    <div class="card-head"><div><h2 class="card-title">速查总表</h2>
+      <p class="card-sub">只读版。考前十分钟扫一遍即可。</p></div>
+      <span class="spacer"></span><button class="ghost small" onclick="window.print()">打印</button></div>
+    <div class="formula">单条延迟 = Σ(Li + R)          满负荷吞吐周期 = max(Li + R)
+细分 k 段（均衡）= ΣL + kR
+offset = log2(B)   index = log2(S)   tag = m − offset − index
+Cache 数据容量 = S × E × B</div>`;
+  h += `<details class="ref" open><summary>Y86-64 六阶段微操作</summary><div class="refbody">`;
+  FEDMW.forEach(it => {
+    h += `<div style="margin:10px 0 4px"><span class="mono" style="font-weight:700">${esc(it.asm)}</span>
+      <span class="chip muted mono">${esc(it.code)}</span>
+      <span class="chip ${it.cc === '设置' ? 'warn' : 'muted'}">${it.cc === '设置' ? '设置 CC' : '不改 CC'}</span></div>
+      <table class="grid"><tbody>`;
+    STAGES.forEach(([k, en, cn]) => {
+      const ops = it.st[k] || [];
+      h += `<tr><td class="mono stage-ab" style="width:34px">${k}</td><td class="mono" style="font-size:12.5px">${
+        ops.length ? ops.map(o => esc(o.l) + ' ← ' + esc(o.a)).join('；') : '<span class="none">无</span>'
+      }</td></tr>`;
+    });
+    h += `</tbody></table>`;
+  });
+  h += `</div></details>`;
+
+  h += `<details class="ref"><summary>控制信号与编码</summary><div class="refbody">
+    <div class="tablewrap"><table class="grid">
+      <thead><tr><th>指令</th><th>srcA</th><th>srcB</th><th>dstE</th><th>dstM</th><th>aluA</th><th>aluB</th><th>set_cc</th></tr></thead><tbody>
+      ${SIGNALS.map(r => `<tr><td class="mono">${esc(r.instr)}</td><td class="mono">${r.srcA}</td><td class="mono">${r.srcB}</td><td class="mono">${r.dstE}</td><td class="mono">${r.dstM}</td><td class="mono">${r.aluA}</td><td class="mono">${r.aluB}</td><td class="mono">${r.setCC}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="tablewrap"><table class="grid">
+      <thead><tr><th>指令</th><th>icode</th><th>ifun</th><th>长度</th><th>编码</th></tr></thead><tbody>
+      ${ENC.map(e => `<tr><td class="mono">${esc(e.instr)}</td><td class="mono">${e.icode}</td><td class="mono">${e.ifun}</td><td class="mono">${e.len}</td><td class="mono">${esc(e.fmt)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="strips">${REGS.map(([r, v]) => `<span class="pill" style="cursor:default">${r} = ${v}</span>`).join('')}</div>
+  </div></details>`;
+
+  h += `<details class="ref"><summary>高频结论与陷阱</summary><div class="refbody">
+    <ul style="margin:6px 0 0; padding-left:20px; font-size:13.5px; line-height:1.9">
+      <li>ISA 不含调用约定；参数寄存器是 ABI。</li>
+      <li>rmmovq / mrmovq 都以 rB 为基址，共用一条地址加法通路。</li>
+      <li>aluB 恒为 valB；irmovq / rrmovq 时是 0。OPq 顺序为 valB OP valA。</li>
+      <li>jXX 不用 ALU，目标地址就是 valC；Cnd 在 E 阶段算出。</li>
+      <li>popq 的 valE = valB + 8，valM = M8[valA]（valA 是旧 %rsp）。</li>
+      <li>数据冒险在 D 阶段检测；前递优先级 E → M → W，段内先访存后 ALU。</li>
+      <li>load-use 无法只靠前递：F、D 停顿，E 气泡。ret 全程插入 3 个气泡。</li>
+      <li>分支预测失败在 E 判定，D、E 插气泡。</li>
+      <li>三种 miss：冷启、容量、冲突；write-back 常配 write-allocate。</li>
+      <li>链接 = 符号解析 + 重定位；callq 未重定位时偏移为 0。</li>
+      <li>fault 返回后重执行当前指令；trap 返回下一条。</li>
+      <li>fork 子返回 0、父返回子 pid；信号不排队。</li>
+      <li>setjmp 首次返回 0；longjmp 传 0 会变成 1。</li>
+    </ul>
+  </div></details>`;
+  h += `</section>`;
+  return h;
+}
+
+/* ---------- 判分 ---------- */
+function checkMain(){
+  if (S.mod === 'fedmw') return checkFedmw();
+  if (S.mod === 'table') return checkDrill('fedmw');
+  if (S.mod === 'signal') return checkDrill('sig');
+  if (S.mod === 'encoding') return checkDrill('enc');
+  if (S.mod === 'hazard') return checkHazard();
+  if (S.mod === 'facts') return checkFact();
+  if (S.mod === 'cache') return checkCache();
+}
+function revealMain(){
+  if (S.mod === 'fedmw') {
+    const it = FEDMW.find(x => x.id === S.fedmwId);
+    const g = gateState(it.id);
+    const hadGate = g.ok;
+    if (!hadGate) {
+      g.pick = gateNeed(it).slice();
+      g.checked = true;
+      g.ok = true;
+      render();
+    }
+    revealScope($('#fedmwCard'));
+    setMark('fedmw:' + S.fedmwId, 'shaky');
+    const fb = $('#feedback');
+    fb.className = 'feedback';
+    fb.textContent = hadGate ? '已显示答案。看完点「下一题」重默一遍。' : '已显示阶段判断与全部答案。看完点「下一题」重默一遍。';
+  } else if (S.mod === 'table' || S.mod === 'signal' || S.mod === 'encoding') {
+    revealScope($('#drillCard'));
+    $('#drillCard').querySelectorAll('.sig-note').forEach(n => { n.hidden = false; });
+    const fb = $('#feedback');
+    fb.className = 'feedback'; fb.textContent = '已显示整表答案。';
+  } else if (S.mod === 'facts') {
+    revealScope($('#factCard'));
+    const f = FACTS.find(x => x.id === S.factId);
+    setMark('fact:' + S.factId, 'shaky');
+    showWhy(f.why);
+    const fb = $('#feedback');
+    fb.className = 'feedback'; fb.textContent = '已显示答案。';
+  }
+}
+function markCurrent(mark){
+  let id = null;
+  if (S.mod === 'fedmw') id = 'fedmw:' + S.fedmwId;
+  else if (S.mod === 'facts') id = 'fact:' + S.factId;
+  else if (S.mod === 'hazard') id = 'hz:' + S.hazardId;
+  if (!id) return;
+  setMark(id, mark);
+  const fb = $('#feedback');
+  if (fb) { fb.className = 'feedback'; fb.textContent = mark === 'solid' ? '已标记为「已掌握」。' : '已标记为「待复习」。'; }
+}
+
+function checkFedmw(){
+  const fb = $('#feedback');
+  const g = gateState(S.fedmwId);
+  if (!g.ok) {
+    fb.className = 'feedback bad';
+    fb.textContent = '先完成上方的阶段判断；全部选对后才会解锁默写。';
+    return;
+  }
+  const card = $('#fedmwCard');
+  const r = gradeScope(card, true);
+  const id = 'fedmw:' + S.fedmwId;
+  if (r.ok === r.total && r.revealed === 0) {
+    fb.className = 'feedback ok';
+    fb.textContent = `全对 ${r.ok}/${r.total}，已标记为「已掌握」。`;
+    setMark(id, 'solid');
+    const pill = document.querySelector('.pill.cur');
+    if (pill) { pill.classList.remove('shaky'); pill.classList.add('solid'); }
+    if (S.autoNext) setTimeout(() => { if (S.mod === 'fedmw') nextFedmw(1); }, 750);
+  } else {
+    fb.className = 'feedback bad';
+    fb.textContent = r.revealed
+      ? `有 ${r.revealed} 个空是看答案填的，建议点「下一题」再默一遍。`
+      : `${r.ok}/${r.total} 正确；红色空格的答案已显示。`;
+    setMark(id, 'shaky');
+    const pill = document.querySelector('.pill.cur');
+    if (pill) { pill.classList.remove('solid'); pill.classList.add('shaky'); }
+  }
+  updateChrome();
+}
+function checkDrill(kind){
+  const table = $('#drillTable');
+  if (!table) return;
+  const rows = [...table.querySelectorAll('tbody tr')];
+  let allOk = true, any = false;
+  rows.forEach(tr => {
+    const r = gradeScope(tr, true);
+    tr.querySelectorAll('.sig-note').forEach(n => { n.hidden = false; });
+    if (!r.total) return;
+    any = true;
+    const resCell = tr.lastElementChild;
+    if (r.ok === r.total && r.revealed === 0) {
+      tr.classList.add('row-ok');
+      if (resCell && !resCell.querySelector('input')) resCell.textContent = '全对';
+      setMark(tr.dataset.id, 'solid', true);
+    } else {
+      tr.classList.remove('row-ok');
+      if (resCell && !resCell.querySelector('input')) resCell.textContent = r.revealed ? '看答案' : `${r.ok}/${r.total}`;
+      setMark(tr.dataset.id, 'shaky', true);
+      allOk = false;
+    }
+  });
+  updateChrome();
+  const fb = $('#feedback');
+  if (!fb) return;
+  fb.className = 'feedback ' + (allOk ? 'ok' : 'bad');
+  fb.textContent = !any ? '先填几个空格再检查。' : allOk ? '整表全对，全部标记为已掌握。' : '有错误或看过答案：红色空格的正确答案已显示，结果列给出得分。';
+}
+function checkHazard(){
+  const hz = HAZARDS.find(x => x.id === S.hazardId);
+  const fb = $('#feedback');
+  if (S.picked === null) {
+    fb.className = 'feedback bad'; fb.textContent = '先选一个选项。'; return;
+  }
+  const opts = document.querySelectorAll('#opts .opt');
+  opts.forEach((el, i) => {
+    el.classList.remove('good', 'wrong');
+    if (i === hz.ans) el.classList.add('good');
+    else if (i === S.picked) el.classList.add('wrong');
+  });
+  const good = S.picked === hz.ans;
+  fb.className = 'feedback ' + (good ? 'ok' : 'bad');
+  fb.textContent = good ? '判断正确。' : '判断错误，绿色是正确选项。';
+  showWhy(hz.why);
+  setMark('hz:' + hz.id, good ? 'solid' : 'shaky');
+}
+function checkFact(){
+  const card = $('#factCard');
+  const r = gradeScope(card, true);
+  const f = FACTS.find(x => x.id === S.factId);
+  const fb = $('#feedback');
+  if (r.ok === r.total && r.revealed === 0) {
+    fb.className = 'feedback ok'; fb.textContent = `全对 ${r.ok}/${r.total}，已标记为「已掌握」。`;
+    setMark('fact:' + f.id, 'solid');
+    if (S.autoNext) setTimeout(() => { if (S.mod === 'facts') nextFact(1); }, 750);
+  } else {
+    fb.className = 'feedback bad';
+    fb.textContent = r.revealed ? '这次是看答案填的，点「下一题」再背一遍。' : `${r.ok}/${r.total} 正确，红色空格已给出答案。`;
+    setMark('fact:' + f.id, 'shaky');
+  }
+  showWhy(f.why);
+  updateChrome();
+}
+function checkCache(){
+  const fb = $('#feedback');
+  if (S.cacheMode === 'calc') {
+    const q = S.cacheQ;
+    const inputs = [...document.querySelectorAll('#cacheCard input[data-num]')];
+    let ok = 0;
+    inputs.forEach(inp => {
+      const want = +inp.dataset.num;
+      const got = parseFloat(String(inp.value).replace(/[^\d.-]/g, ''));
+      const good = got === want;
+      inp.classList.toggle('ok', good);
+      inp.classList.toggle('bad', !good);
+      if (good) ok++;
+    });
+    fb.className = 'feedback ' + (ok === inputs.length ? 'ok' : 'bad');
+    fb.textContent = ok === inputs.length
+      ? '全对。'
+      : `${ok}/${inputs.length} 正确。答案：offset ${q.off} 位，index ${q.index} 位，tag ${q.tag} 位，容量 ${q.cap} 字节（${q.blocks} 块 × ${q.B} B）。`;
+  } else {
+    const s = S.sim;
+    if (s.pick.includes(null)) {
+      fb.className = 'feedback bad'; fb.textContent = '每一行都要选 Hit 或 Miss。'; return;
+    }
+    let ok = 0, hits = 0;
+    s.res.forEach((hit, i) => {
+      const good = (s.pick[i] === 'H') === hit;
+      if (good) ok++;
+      if (hit) hits++;
+      const tr = document.querySelector(`tr[data-step="${i}"]`);
+      if (tr) {
+        tr.classList.toggle('step-ok', good);
+        tr.classList.toggle('step-bad', !good);
+        tr.querySelector('.corr').textContent = hit ? 'Hit' : 'Miss';
+      }
+    });
+    fb.className = 'feedback ' + (ok === s.res.length ? 'ok' : 'bad');
+    fb.textContent = `${ok}/${s.res.length} 正确。该序列共 ${hits} 次 Hit、${s.res.length - hits} 次 Miss。`;
+    const d = $('#simDetail');
+    if (d) {
+      let t = `<div class="tablewrap"><table class="grid">
+        <thead><tr><th>#</th><th>地址</th><th>tag</th><th>index</th><th>offset</th><th>结果</th></tr></thead><tbody>`;
+      s.seq.forEach((addr, i) => {
+        const off = addr % s.B;
+        const idx = Math.floor(addr / s.B) % s.Sset;
+        const tag = Math.floor(addr / (s.B * s.Sset));
+        t += `<tr><td>${i + 1}</td><td class="mono">${addr}</td><td class="mono">${tag}</td><td class="mono">${idx}</td><td class="mono">${off}</td><td class="mono">${s.res[i] ? 'Hit' : 'Miss'}</td></tr>`;
+      });
+      t += `</tbody></table></div>
+        <p class="hint">最终 Cache 状态（tag / 块号）：</p>
+        <div class="tablewrap"><table class="grid cache-tbl">
+        <thead><tr><th>组</th><th>valid</th><th>tag</th><th>块号</th><th>块内地址范围</th></tr></thead><tbody>`;
+      s.final.forEach((st, i) => {
+        t += `<tr><td>${i}</td><td>${st.valid ? 1 : 0}</td><td>${st.valid ? st.tag : '—'}</td><td>${st.valid ? st.block : '—'}</td><td>${st.valid ? `${st.block * s.B}–${st.block * s.B + s.B - 1}` : '—'}</td></tr>`;
+      });
+      t += `</tbody></table></div>`;
+      d.innerHTML = t;
+    }
+  }
+}
+
+/* ---------- 选项绑定 ---------- */
+function applyOpts(){
+  S.autoNext = $('#optAutoNext').checked;
+  S.onlyTodo = $('#optOnlyTodo').checked;
+  S.shuffle = $('#optShuffle').checked;
+  ensureOrder('fedmw', FEDMW.map(x => x.id), true);
+  ensureOrder('fact', FACTS.map(x => x.id), true);
+  ensureOrder('hz', HAZARDS.map(x => x.id), true);
+  try {
+    localStorage.setItem(LSOPT, JSON.stringify({ autoNext: S.autoNext, onlyTodo: S.onlyTodo, shuffle: S.shuffle, theme: document.documentElement.dataset.theme }));
+  } catch (e) {}
+  render();
+}
+function restoreOpts(){
+  try {
+    const o = JSON.parse(localStorage.getItem(LSOPT) || '{}');
+    if (typeof o.autoNext === 'boolean') S.autoNext = o.autoNext;
+    if (typeof o.onlyTodo === 'boolean') S.onlyTodo = o.onlyTodo;
+    if (typeof o.shuffle === 'boolean') S.shuffle = o.shuffle;
+    if (o.theme === 'dark') document.documentElement.dataset.theme = 'dark';
+  } catch (e) {}
+  $('#optAutoNext').checked = S.autoNext;
+  $('#optOnlyTodo').checked = S.onlyTodo;
+  $('#optShuffle').checked = S.shuffle;
+}
+$('#optAutoNext').addEventListener('change', applyOpts);
+$('#optOnlyTodo').addEventListener('change', applyOpts);
+$('#optShuffle').addEventListener('change', applyOpts);
+$('#btnTheme').addEventListener('click', () => {
+  const d = document.documentElement;
+  d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark';
+  try {
+    const o = JSON.parse(localStorage.getItem(LSOPT) || '{}');
+    o.theme = d.dataset.theme;
+    localStorage.setItem(LSOPT, JSON.stringify(o));
+  } catch (e) {}
+});
+$('#btnReset').addEventListener('click', () => {
+  if (!confirm('清空本页的全部掌握标记？')) return;
+  storeData = {};
+  saveStore();
+  render();
+});
+
+document.addEventListener('input', e => {
+  if (e.target.classList && e.target.classList.contains('blank')) {
+    e.target.classList.remove('ok', 'bad');
+    delete e.target.dataset.revealed;
+  }
+});
+document.addEventListener('keydown', e => {
+  const t = e.target;
+  if (t && t.classList && t.classList.contains('blank') && e.key === 'Enter') {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) revealMain(); else checkMain();
+  } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && S.mod !== 'home' && S.mod !== 'ref') {
+    e.preventDefault();
+    checkMain();
+  }
+});
+
+/* ---------- 启动 ---------- */
+restoreOpts();
+ensureOrder('fedmw', FEDMW.map(x => x.id), true);
+ensureOrder('fact', FACTS.map(x => x.id), true);
+ensureOrder('hz', HAZARDS.map(x => x.id), true);
+render();
+
+</script>
+</body>
+</html>
