@@ -190,6 +190,11 @@ table.fedmw td.stage{width:118px; white-space:nowrap}
 .gate-sub{font-size:12.5px; color:var(--muted); margin:4px 0 10px}
 .gate-note{font-size:12.5px; color:var(--muted)}
 .gate-stages{display:flex; gap:7px; flex-wrap:wrap}
+.gate-cc{
+  margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.gate-label{font-size:12px; font-weight:700; color:var(--muted); letter-spacing:.04em}
 .gstage{
   display:inline-flex; align-items:baseline; gap:6px;
   padding:6px 11px; border-radius:9px; border:1px solid var(--line);
@@ -888,11 +893,13 @@ function go(mod){
 }
 function pickFedmw(id){ S.fedmwId = id; S.picked = null; render(); }
 function gateState(id){
-  if (!S.gate[id]) S.gate[id] = { pick: [], checked: false, ok: false };
+  if (!S.gate[id]) S.gate[id] = { pick: [], cc: null, checked: false, ok: false };
   return S.gate[id];
 }
 function stageHasOps(it, k){ return (it.st[k] || []).length > 0; }
 function gateNeed(it){ return STAGES.filter(([k]) => stageHasOps(it, k)).map(([k]) => k); }
+function ccMode(it){ return it.id === 'opq' ? 'set' : (it.id === 'cmov' || it.id === 'jxx') ? 'read' : 'none'; }
+function ccLabel(m){ return m === 'set' ? '设置条件码' : m === 'read' ? '读取条件码' : '不涉及条件码'; }
 function toggleGate(k){
   const g = gateState(S.fedmwId);
   if (g.ok) return;
@@ -901,13 +908,21 @@ function toggleGate(k){
   if (i >= 0) g.pick.splice(i, 1); else g.pick.push(k);
   render();
 }
+function pickCC(v){
+  const g = gateState(S.fedmwId);
+  if (g.ok) return;
+  g.cc = v;
+  g.checked = false;
+  render();
+}
 function checkGate(){
   const it = FEDMW.find(x => x.id === S.fedmwId);
   const g = gateState(it.id);
   if (g.ok) return;
   g.checked = true;
   const need = gateNeed(it);
-  g.ok = g.pick.length === need.length && g.pick.every(k => need.includes(k));
+  const stageOk = g.pick.length === need.length && g.pick.every(k => need.includes(k));
+  g.ok = stageOk && g.cc === ccMode(it);
   render();
   if (g.ok) {
     const inp = document.querySelector('#fedmwCard input.blank');
@@ -1016,18 +1031,27 @@ function viewHome(){
 function gateView(it){
   const g = gateState(it.id);
   const need = gateNeed(it);
+  const cm = ccMode(it);
   if (g.ok) {
     return `<div class="gate done" id="gateBox">
-      <div class="gate-head"><b>阶段判断</b><span class="chip ok">✓ 判断正确</span>
-        <span class="gate-note">这条指令实际执行 ${need.length} 个阶段，下面开始逐空默写。</span></div>
+      <div class="gate-head"><b>阶段与条件码</b><span class="chip ok">✓ 判断正确</span>
+        <span class="chip ${cm === 'set' ? 'warn' : cm === 'read' ? '' : 'muted'}">${ccLabel(cm)}</span>
+        <span class="gate-note">实际执行 ${need.length} 个阶段，下面开始逐空默写。</span></div>
       <div class="gate-stages">${STAGES.filter(([k]) => need.includes(k)).map(([k, en, cn]) =>
         `<span class="gstage on"><b>${k}</b><span>${cn}</span></span>`).join('')}</div>
     </div>`;
   }
   const sel = new Set(g.pick);
+  const ccOpts = [['set', '设置 CC'], ['read', '读取 CC'], ['none', '不涉及 CC']];
+  let fb = '';
+  if (g.checked) {
+    if (!g.pick.length) fb = '至少选择一个阶段。';
+    else if (g.cc == null) fb = '还要选择条件码关系（设置 / 读取 / 不涉及）。';
+    else if (!g.ok) fb = '判断还不全对：红色为多选或选错，橙色为漏选；改完再确认。';
+  }
   return `<div class="gate" id="gateBox">
-    <div class="gate-head"><b>第一步 · 判断阶段</b><span class="chip muted">选出需要执行的阶段</span></div>
-    <p class="gate-sub">选中 = 这条指令需要执行的阶段，不选 = 不需要。全部判断正确后才解锁下方默写；选错时红色为多选、橙色为漏选。</p>
+    <div class="gate-head"><b>第一步 · 判断阶段</b><span class="chip muted">选中 = 需要执行</span></div>
+    <p class="gate-sub">判断这条指令执行哪些阶段，以及它与条件码的关系；两项都正确才解锁默写。</p>
     <div class="gate-stages">${STAGES.map(([k, en, cn]) => {
       const on = sel.has(k);
       let cls = 'gstage' + (on ? ' on' : '');
@@ -1039,13 +1063,22 @@ function gateView(it){
       }
       return `<button class="${cls}" onclick="toggleGate('${k}')"><b>${k}</b><span>${cn}</span></button>`;
     }).join('')}</div>
+    <div class="gate-cc">
+      <span class="gate-label">第二步 · 条件码</span>
+      <div class="gate-stages">${ccOpts.map(([v, t]) => {
+        let cls = 'gstage' + (g.cc === v ? ' on' : '');
+        if (g.checked && g.cc != null) {
+          if (v === cm) cls += ' good';
+          else if (g.cc === v) cls += ' bad';
+        }
+        return `<button class="${cls}" onclick="pickCC('${v}')">${t}</button>`;
+      }).join('')}</div>
+    </div>
     <div class="actions" style="margin-top:12px">
       <button class="primary" onclick="checkGate()">确认判断</button>
-      <span class="hint" style="margin:0">全选对才会出现默写空格。</span>
+      <span class="hint" style="margin:0">阶段与条件码都选对才会出现默写空格。</span>
     </div>
-    <div class="feedback ${g.checked ? (g.ok ? 'ok' : 'bad') : ''}" id="gateFb">${
-      g.checked ? (g.pick.length ? '还有判断错误：红色是多选了，橙色是漏选了，改完再确认。' : '至少选择一个阶段。') : ''
-    }</div>
+    <div class="feedback ${g.checked ? (g.ok ? 'ok' : 'bad') : ''}" id="gateFb">${fb}</div>
   </div>`;
 }
 function viewFedmw(){
@@ -1059,7 +1092,7 @@ function viewFedmw(){
       <span class="instr-name">${esc(it.asm)}</span>
       <span class="chip">${esc(it.kind)}</span>
       <span class="chip muted mono">${esc(it.code)}</span>
-      <span class="chip ${it.cc === '设置' ? 'warn' : 'muted'}">${it.cc === '设置' ? '设置条件码' : '不改条件码'}</span>
+      ${g.ok ? `<span class="chip ${ccMode(it) === 'set' ? 'warn' : ccMode(it) === 'read' ? '' : 'muted'}">${ccLabel(ccMode(it))}</span>` : ''}
       <span class="spacer"></span>
       <span class="chip muted">${idx + 1} / ${list.length}</span>
     </div>
@@ -1079,8 +1112,9 @@ function viewFedmw(){
   }
   h += `<div class="actions">`;
   if (g.ok) h += `<button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>`;
-  h += `<button onclick="revealMain()">显示答案</button>
-      <button class="ghost" onclick="nextFedmw(-1)">上一题</button>
+  h += `<button onclick="revealMain()">显示答案</button>`;
+  if (g.ok) h += `<button class="ghost" onclick="clearAnswers()">清空作答</button>`;
+  h += `<button class="ghost" onclick="nextFedmw(-1)">上一题</button>
       <button class="ghost" onclick="nextFedmw(1)">下一题</button>`;
   if (g.ok) h += `<span class="spacer"></span>
       <button class="ghost small" onclick="markCurrent('solid')">标记已掌握</button>
@@ -1124,6 +1158,7 @@ function viewTable(){
     <div class="actions">
       <button class="primary" onclick="checkMain()">检查整列 <kbd>Enter</kbd></button>
       <button onclick="revealMain()">显示答案</button>
+      <button class="ghost" onclick="clearAnswers()">清空作答</button>
       <span class="spacer"></span>
       <span class="op-note">共 ${rows.length} 行</span>
     </div>
@@ -1172,6 +1207,7 @@ function viewSignal(){
     <div class="actions">
       <button class="primary" onclick="checkMain()">检查整表 <kbd>Enter</kbd></button>
       <button onclick="revealMain()">显示答案</button>
+      <button class="ghost" onclick="clearAnswers()">清空作答</button>
     </div>
     <div class="feedback" id="feedback"></div>
     <p class="hint">srcA/srcB 是读端口，dstE/dstM 是写端口；aluA 只在这条指令真正使用 ALU 时才有意义。</p>
@@ -1199,6 +1235,7 @@ function viewEncoding(){
     <div class="actions">
       <button class="primary" onclick="checkMain()">检查整表 <kbd>Enter</kbd></button>
       <button onclick="revealMain()">显示答案</button>
+      <button class="ghost" onclick="clearAnswers()">清空作答</button>
       <span class="spacer"></span>
       <span class="op-note">寄存器编号：%rax=0 … %rdi=7，none=F</span>
     </div>
@@ -1274,6 +1311,7 @@ function viewFact(){
   h += `<div class="actions">
       <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
       <button onclick="revealMain()">显示答案</button>
+      <button class="ghost" onclick="clearAnswers()">清空作答</button>
       <button class="ghost" onclick="nextFact(-1)">上一题</button>
       <button class="ghost" onclick="nextFact(1)">下一题</button>
       <span class="spacer"></span>
@@ -1360,6 +1398,7 @@ function viewCache(){
       <div class="actions">
         <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
         <button onclick="newCache()">换一题</button>
+        <button class="ghost" onclick="clearAnswers()">清空作答</button>
       </div>
       <div class="feedback" id="feedback"></div>
       <p class="hint">提示：总块数 = S × E，容量 = 总块数 × B；tag 吃掉剩下的所有高位。</p>`;
@@ -1381,6 +1420,7 @@ function viewCache(){
       <div class="actions">
         <button class="primary" onclick="checkMain()">检查 <kbd>Enter</kbd></button>
         <button onclick="newCache()">换一题</button>
+        <button class="ghost" onclick="clearAnswers()">清空作答</button>
       </div>
       <div class="feedback" id="feedback"></div>
       <div id="simDetail"></div>`;
@@ -1412,9 +1452,10 @@ offset = log2(B)   index = log2(S)   tag = m − offset − index
 Cache 数据容量 = S × E × B</div>`;
   h += `<details class="ref" open><summary>Y86-64 六阶段微操作</summary><div class="refbody">`;
   FEDMW.forEach(it => {
+    const cm = ccMode(it);
     h += `<div style="margin:10px 0 4px"><span class="mono" style="font-weight:700">${esc(it.asm)}</span>
       <span class="chip muted mono">${esc(it.code)}</span>
-      <span class="chip ${it.cc === '设置' ? 'warn' : 'muted'}">${it.cc === '设置' ? '设置 CC' : '不改 CC'}</span></div>
+      <span class="chip ${cm === 'set' ? 'warn' : cm === 'read' ? '' : 'muted'}">${cm === 'set' ? '设置 CC' : cm === 'read' ? '读取 CC' : '不涉及 CC'}</span></div>
       <table class="grid"><tbody>`;
     STAGES.forEach(([k, en, cn]) => {
       const ops = it.st[k] || [];
@@ -1476,6 +1517,7 @@ function revealMain(){
     const hadGate = g.ok;
     if (!hadGate) {
       g.pick = gateNeed(it).slice();
+      g.cc = ccMode(it);
       g.checked = true;
       g.ok = true;
       render();
@@ -1508,6 +1550,46 @@ function markCurrent(mark){
   setMark(id, mark);
   const fb = $('#feedback');
   if (fb) { fb.className = 'feedback'; fb.textContent = mark === 'solid' ? '已标记为「已掌握」。' : '已标记为「待复习」。'; }
+}
+function clearAnswers(){
+  if (S.mod === 'cache') {
+    if (S.cacheMode === 'sim') {
+      S.sim.pick = Array(S.sim.seq.length).fill(null);
+      render();
+    } else {
+      document.querySelectorAll('#cacheCard input[data-num]').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('ok', 'bad');
+      });
+    }
+    const fb = $('#feedback');
+    if (fb) { fb.className = 'feedback'; fb.textContent = '已清空作答。'; }
+    return;
+  }
+  const card = $('#fedmwCard') || $('#drillCard') || $('#factCard');
+  if (!card) return;
+  card.querySelectorAll('input.blank').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('ok', 'bad', 'revealed');
+    delete inp.dataset.revealed;
+    const ans = inp.parentElement.querySelector('.ans');
+    if (ans) ans.hidden = true;
+  });
+  if (S.mod === 'table' || S.mod === 'signal' || S.mod === 'encoding') {
+    card.querySelectorAll('tbody tr').forEach(tr => {
+      if (!tr.querySelector('input.blank')) return;
+      tr.classList.remove('row-ok');
+      const res = tr.lastElementChild;
+      if (res && !res.querySelector('input')) res.textContent = '';
+    });
+    card.querySelectorAll('.sig-note').forEach(n => { n.hidden = true; });
+  }
+  if (S.mod === 'facts') {
+    const why = $('#why');
+    if (why) { why.hidden = true; why.innerHTML = ''; }
+  }
+  const fb = $('#feedback');
+  if (fb) { fb.className = 'feedback'; fb.textContent = '已清空作答。'; }
 }
 
 function checkFedmw(){
