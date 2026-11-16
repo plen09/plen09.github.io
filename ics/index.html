@@ -489,7 +489,7 @@ footer {
       <span class="sub-divider"></span>
       <span>Stage 1/2 & LABtest & FINAL</span>
       <span class="sub-divider"></span>
-      <span>阶段一 203 题 · 阶段二 373 题已收录</span>
+      <span>阶段一 203 题 · 阶段二 373 题 · LAB 50 题已收录</span>
     </div>
   </header>
 
@@ -559,33 +559,35 @@ footer {
     </a>
 
     <!-- LAB 测验 -->
-    <div class="card disabled">
+    <a class="card active" href="./lab/">
       <div>
         <div class="card-head">
           <h2 class="card-title">LAB 测验</h2>
-          <span class="status-pill waiting">
-            <span class="dot"></span>制作中
+          <span class="status-pill ready">
+            <span class="dot"></span>已就绪
           </span>
         </div>
         <div class="date-row">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          2026-12-24 周四
+          2026-12-24 周四 08:00
         </div>
         <div class="tags">
           <span class="tag">L0 – L8 全实验</span>
+          <span class="tag">共 50 题</span>
+          <span class="tag">2025 真题全卷</span>
         </div>
         <p class="desc">
-          聚焦 Linux 基础、底层工具链 (GDB/Objdump/Make) 以及 8 个 lab。
+          2025 LAB 测验全卷：Linux 与工具链、Data / Bomb / Attack / Arch / Cache / Shell / Malloc / Proxy 八个 Lab，覆盖「做了什么 + 为什么」，含逐题解析与考前速查。
         </p>
       </div>
       <div class="card-foot">
         <span class="code-path">/ics/lab/</span>
-        <span class="disabled-hint">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          题库生成中
+        <span class="action-link">
+          进入刷题
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </span>
       </div>
-    </div>
+    </a>
 
     <!-- 期末考试 -->
     <div class="card disabled">
@@ -621,6 +623,13 @@ footer {
   <section class="log">
     <h2>更新记录</h2>
     <ul>
+      <li><time>2026-11-16</time>
+        <div>
+          <div>新增 LAB 测验全卷刷题页</div>
+          <div>收录 2025 真题共 50 题</div>
+          <div>LAB 卡片改为已就绪</div>
+        </div>
+      </li>
       <li><time>2026-11-15</time>
         <div>
           <div>B72、B62 等 14 道客观题改为自动判分填空题</div>
@@ -683,7 +692,7 @@ footer {
 
   <!-- 页脚 -->
   <footer>
-    <div>更新于 <time data-updated>2026-11-15</time>（UTC+8）</div>
+    <div>更新于 <time data-updated>2026-11-16</time>（UTC+8）</div>
     <div class="footer-right">
       <span>ICS 备考刷题台</span>
       <span>·</span>
